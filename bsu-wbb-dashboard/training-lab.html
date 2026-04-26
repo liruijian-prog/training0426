@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>北体女篮训练数据实验室</title>
+    <meta
+      name="description"
+      content="用于输入训练周报数据并自动分析北体女篮球队与球员技战术特点、训练计划与训练目标适配的静态前端页面。"
+    />
+    <link rel="stylesheet" href="./training-lab.css" />
+    <script defer src="./training-lab.js"></script>
+  </head>
+  <body>
+    <div class="lab-shell">
+      <header class="lab-topbar">
+        <div class="lab-brand">
+          <div class="lab-badge">北体</div>
+          <div class="lab-crest" aria-label="北京体育大学品牌识别位">
+            <span class="crest-english">BSU</span>
+            <span class="crest-chinese">北京体育大学</span>
+          </div>
+          <div>
+            <p class="lab-subtitle">Basketball Academy Training Lab</p>
+            <h1>北体女篮训练数据实验室</h1>
+          </div>
+        </div>
+        <div class="lab-actions">
+          <span class="lab-pill">训练周报 / 技术统计版</span>
+          <a class="lab-button secondary" href="./index.html">返回比赛分析页</a>
+        </div>
+      </header>
+
+      <main class="lab-main">
+        <section class="lab-hero reveal-lab">
+          <div class="lab-hero-copy">
+            <span class="lab-chip">周报录入 / 球队画像 / 计划建议</span>
+            <h2>按正规篮球技术统计录入训练周报，再直接生成球队和球员的训练判断。</h2>
+            <p>
+              当前页面优先服务教练训练场景。录入一周训练统计后，页面会自动生成
+              `球队技战术画像`、`球员特点判断`、`训练重点` 和 `目标适配方向`，方便你用静态前端直接演示。
+            </p>
+            <div class="hero-cards">
+              <article>
+                <strong>球队周报</strong>
+                <span>投篮 / 篮板 / 助失比 / 防守活跃度 / 得分来源</span>
+              </article>
+              <article>
+                <strong>球员周报</strong>
+                <span>得分 / 篮板 / 组织 / 防守 / 效率 / 稳定性</span>
+              </article>
+              <article>
+                <strong>训练建议</strong>
+                <span>补短板 / 保强项 / 训练目标适配 / 下周安排</span>
+              </article>
+            </div>
+          </div>
+          <aside class="lab-hero-panel">
+            <span class="lab-chip cool">训练场景 / 冷色版本</span>
+            <h3>不做复杂系统，只做主教练能快速输入、快速判断、快速安排训练的前端页。</h3>
+            <ul>
+              <li>不依赖后端，适合训练营作品展示。</li>
+              <li>技术统计输入尽量贴近正规篮球周报。</li>
+              <li>页面偏冷静、偏执行，但和比赛页使用统一品牌语言。</li>
+            </ul>
+          </aside>
+        </section>
+
+        <section class="lab-overview reveal-lab">
+          <article class="lab-card overview-card">
+            <div class="card-head">
+              <div>
+                <span class="lab-chip">使用方式</span>
+                <h3>建议按一周训练数据填写</h3>
+              </div>
+            </div>
+            <div class="overview-grid">
+              <article>
+                <strong>球队维度</strong>
+                <p>适合填本周分组对抗、教学比赛和重点课次汇总后的整体数据。</p>
+              </article>
+              <article>
+                <strong>球员维度</strong>
+                <p>适合填重点队员周均表现或阶段均值，用来判断个体训练目标。</p>
+              </article>
+              <article>
+                <strong>自动分析</strong>
+                <p>系统会将基础统计转成外线效率、内线存在感、组织稳定性和防守活跃度等可视化维度。</p>
+              </article>
+            </div>
+          </article>
+        </section>
+
+        <section class="lab-grid reveal-lab">
+          <article class="lab-card input-card">
+            <div class="card-head">
+              <div>
+                <span class="lab-chip">球队训练周报</span>
+                <h3>输入球队技术统计</h3>
+              </div>
+              <span class="section-note">建议填写一周训练汇总或阶段均值</span>
+            </div>
+
+            <div class="stat-group">
+              <h4>基础投篮</h4>
+              <div class="input-grid three-col">
+                <label>
+                  <span>投篮命中 FGM</span>
+                  <input id="team-fgm" type="number" min="0" value="31" />
+                </label>
+                <label>
+                  <span>投篮出手 FGA</span>
+                  <input id="team-fga" type="number" min="1" value="68" />
+                </label>
+                <label>
+                  <span>投篮命中率 FG%</span>
+                  <input id="team-fg-pct" class="derived-input" type="number" min="0" max="100" step="0.1" value="45.6" readonly />
+                </label>
+                <label>
+                  <span>三分命中 3PM</span>
+                  <input id="team-3pm" type="number" min="0" value="6" />
+                </label>
+                <label>
+                  <span>三分出手 3PA</span>
+                  <input id="team-3pa" type="number" min="0" value="21" />
+                </label>
+                <label>
+                  <span>三分命中率 3P%</span>
+                  <input id="team-3p-pct" class="derived-input" type="number" min="0" max="100" step="0.1" value="28.6" readonly />
+                </label>
+                <label>
+                  <span>罚球命中 FTM</span>
+                  <input id="team-ftm" type="number" min="0" value="13" />
+                </label>
+                <label>
+                  <span>罚球出手 FTA</span>
+                  <input id="team-fta" type="number" min="0" value="18" />
+                </label>
+                <label>
+                  <span>罚球命中率 FT%</span>
+                  <input id="team-ft-pct" class="derived-input" type="number" min="0" max="100" step="0.1" value="72.2" readonly />
+                </label>
+              </div>
+            </div>
+
+            <div class="stat-group">
+              <h4>篮板与回合控制</h4>
+              <div class="input-grid three-col">
+                <label>
+                  <span>前场篮板 OREB</span>
+                  <input id="team-oreb" type="number" min="0" value="14" />
+                </label>
+                <label>
+                  <span>后场篮板 DREB</span>
+                  <input id="team-dreb" type="number" min="0" value="24" />
+                </label>
+                <label>
+                  <span>总篮板 REB</span>
+                  <input id="team-reb" class="derived-input" type="number" min="0" value="38" readonly />
+                </label>
+                <label>
+                  <span>助攻 AST</span>
+                  <input id="team-ast" type="number" min="0" value="17" />
+                </label>
+                <label>
+                  <span>失误 TOV</span>
+                  <input id="team-tov" type="number" min="0" value="16" />
+                </label>
+                <label>
+                  <span>助失比 AST/TOV</span>
+                  <input id="team-ast-tov" class="derived-input" type="number" min="0" step="0.01" value="1.06" readonly />
+                </label>
+              </div>
+            </div>
+
+            <div class="stat-group">
+              <h4>防守与得分来源</h4>
+              <div class="input-grid three-col">
+                <label>
+                  <span>抢断 STL</span>
+                  <input id="team-stl" type="number" min="0" value="10" />
+                </label>
+                <label>
+                  <span>盖帽 BLK</span>
+                  <input id="team-blk" type="number" min="0" value="4" />
+                </label>
+                <label>
+                  <span>犯规 PF</span>
+                  <input id="team-pf" type="number" min="0" value="18" />
+                </label>
+                <label>
+                  <span>快攻得分</span>
+                  <input id="team-fastbreak" type="number" min="0" value="14" />
+                </label>
+                <label>
+                  <span>二次进攻得分</span>
+                  <input id="team-second-chance" type="number" min="0" value="12" />
+                </label>
+                <label>
+                  <span>内线得分</span>
+                  <input id="team-paint" type="number" min="0" value="34" />
+                </label>
+              </div>
+            </div>
+
+            <label class="full-field">
+              <span>球队训练观察备注</span>
+              <textarea id="team-note" rows="4">本周对抗中内线终结和篮板优势还在，但外线投射效率偏低，失误偏多，比赛末段连续执行质量下降。</textarea>
+            </label>
+          </article>
+
+          <article class="lab-card input-card">
+            <div class="card-head">
+              <div>
+                <span class="lab-chip">球员训练周报</span>
+                <h3>输入单名球员技术统计</h3>
+              </div>
+              <span class="section-note">适合主力球员周均或阶段均值</span>
+            </div>
+
+            <div class="input-grid three-col">
+              <label class="wide-field">
+                <span>球员姓名</span>
+                <input id="player-name" type="text" value="孙恬馨" />
+              </label>
+              <label>
+                <span>得分 PTS</span>
+                <input id="player-pts" type="number" min="0" value="18.5" />
+              </label>
+              <label>
+                <span>篮板 REB</span>
+                <input id="player-reb" type="number" min="0" value="11.2" />
+              </label>
+              <label>
+                <span>前场篮板 ORB</span>
+                <input id="player-orb" type="number" min="0" value="4.1" />
+              </label>
+              <label>
+                <span>后场篮板 DRB</span>
+                <input id="player-drb" type="number" min="0" value="7.1" />
+              </label>
+              <label>
+                <span>助攻 AST</span>
+                <input id="player-ast" type="number" min="0" value="2.4" />
+              </label>
+              <label>
+                <span>失误 TOV</span>
+                <input id="player-tov" type="number" min="0" value="3.1" />
+              </label>
+              <label>
+                <span>抢断 STL</span>
+                <input id="player-stl" type="number" min="0" value="1.8" />
+              </label>
+              <label>
+                <span>盖帽 BLK</span>
+                <input id="player-blk" type="number" min="0" value="1.2" />
+              </label>
+              <label>
+                <span>投篮命中率 FG%</span>
+                <input id="player-fg-pct" type="number" min="0" max="100" step="0.1" value="51.3" />
+              </label>
+              <label>
+                <span>三分命中率 3P%</span>
+                <input id="player-3p-pct" type="number" min="0" max="100" step="0.1" value="25.0" />
+              </label>
+              <label>
+                <span>罚球命中率 FT%</span>
+                <input id="player-ft-pct" type="number" min="0" max="100" step="0.1" value="74.2" />
+              </label>
+              <label>
+                <span>上场时间 MIN</span>
+                <input id="player-min" type="number" min="0" value="31.5" />
+              </label>
+              <label>
+                <span>犯规 PF</span>
+                <input id="player-pf" type="number" min="0" value="2.9" />
+              </label>
+            </div>
+
+            <label class="full-field">
+              <span>球员训练观察备注</span>
+              <textarea id="player-note" rows="4">当前仍是最稳定的内线终结点和篮板点，但在高压夹击后出球和外线牵制价值还可以继续提升。</textarea>
+            </label>
+          </article>
+        </section>
+
+        <section class="action-row reveal-lab">
+          <button class="lab-button primary" type="button" id="analyze-button">生成训练分析</button>
+          <button class="lab-button secondary" type="button" id="reset-button">恢复默认数据</button>
+        </section>
+
+        <section class="results-grid reveal-lab">
+          <article class="lab-card result-card">
+            <div class="card-head">
+              <div>
+                <span class="lab-chip">球队画像</span>
+                <h3>球队技战术特点分析</h3>
+              </div>
+            </div>
+            <div class="cool-radar">
+              <div class="cool-ring ring-one"></div>
+              <div class="cool-ring ring-two"></div>
+              <div class="cool-ring ring-three"></div>
+              <div class="cool-ring ring-four"></div>
+              <div class="cool-axis axis-top"></div>
+              <div class="cool-axis axis-right"></div>
+              <div class="cool-axis axis-bottom-right"></div>
+              <div class="cool-axis axis-bottom-left"></div>
+              <div class="cool-axis axis-left"></div>
+              <div class="cool-axis axis-top-left"></div>
+              <div class="cool-shape" id="team-radar-shape"></div>
+              <span class="cool-label label-top">进攻效率</span>
+              <span class="cool-label label-right">防守活跃</span>
+              <span class="cool-label label-bottom-right">稳定执行</span>
+              <span class="cool-label label-bottom">组织协同</span>
+              <span class="cool-label label-bottom-left">篮板存在</span>
+              <span class="cool-label label-left">外线质量</span>
+            </div>
+            <div class="analysis-output" id="team-analysis">
+              当前球队更偏向内线驱动和篮板支撑型，外线效率与组织稳定性是最需要补的两项。
+            </div>
+            <div class="tag-output" id="team-tags"></div>
+          </article>
+
+          <article class="lab-card result-card">
+            <div class="card-head">
+              <div>
+                <span class="lab-chip">球员画像</span>
+                <h3>球员技战术特点分析</h3>
+              </div>
+            </div>
+            <div class="cool-radar">
+              <div class="cool-ring ring-one"></div>
+              <div class="cool-ring ring-two"></div>
+              <div class="cool-ring ring-three"></div>
+              <div class="cool-ring ring-four"></div>
+              <div class="cool-axis axis-top"></div>
+              <div class="cool-axis axis-right"></div>
+              <div class="cool-axis axis-bottom-right"></div>
+              <div class="cool-axis axis-bottom-left"></div>
+              <div class="cool-axis axis-left"></div>
+              <div class="cool-axis axis-top-left"></div>
+              <div class="cool-shape player-shape" id="player-radar-shape"></div>
+              <span class="cool-label label-top">终结效率</span>
+              <span class="cool-label label-right">防守影响</span>
+              <span class="cool-label label-bottom-right">稳定度</span>
+              <span class="cool-label label-bottom">组织处理</span>
+              <span class="cool-label label-bottom-left">篮板影响</span>
+              <span class="cool-label label-left">外线威胁</span>
+            </div>
+            <div class="analysis-output" id="player-analysis">
+              孙恬馨当前仍是以内线终结和篮板保护见长的球员，适合承担终结支点与二次进攻核心职责。
+            </div>
+            <div class="tag-output" id="player-tags"></div>
+          </article>
+        </section>
+
+        <section class="plan-grid reveal-lab">
+          <article class="lab-card plan-card">
+            <div class="card-head">
+              <div>
+                <span class="lab-chip">训练重点</span>
+                <h3>下周训练计划建议</h3>
+              </div>
+            </div>
+            <ul class="plan-list" id="plan-list">
+              <li>优先补强外线投射效率，安排接球投和疲劳后投篮专项。</li>
+              <li>针对助失比偏低的问题，增加强压下决策和二传衔接训练。</li>
+              <li>保持内线优势，继续强化前场篮板后的二次进攻与顺下终结。</li>
+            </ul>
+          </article>
+
+          <article class="lab-card plan-card">
+            <div class="card-head">
+              <div>
+                <span class="lab-chip">目标适配</span>
+                <h3>训练目标如何匹配当前特点</h3>
+              </div>
+            </div>
+            <div class="goal-output" id="goal-output">
+              当前更适合采用“稳住内线优势 + 优先修补外围效率和组织稳定性”的训练目标结构。
+            </div>
+            <div class="metric-summary" id="metric-summary">
+              球队短板优先级：外线质量、组织协同。球员短板优先级：外线威胁、组织处理。
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

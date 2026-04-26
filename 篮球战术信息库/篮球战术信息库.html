@@ -1,0 +1,2129 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>临场破阵 | 篮球战术信息库</title>
+  <style>
+    :root {
+      --bg: #f6f4ec;
+      --paper: #ffffff;
+      --card: #fbfaf5;
+      --ink: #101418;
+      --muted: #68717a;
+      --line: rgba(16, 20, 24, 0.08);
+      --primary: #15342f;
+      --primary-deep: #0d221e;
+      --accent: #b98749;
+      --accent-soft: rgba(185, 135, 73, 0.12);
+      --green: #214a41;
+      --green-soft: rgba(33, 74, 65, 0.08);
+      --shadow: 0 18px 42px rgba(18, 24, 32, 0.06);
+      --radius-xl: 34px;
+      --radius-lg: 26px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --max: 1280px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #fbfaf6 0%, #f2efe5 100%);
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .wrap {
+      width: min(calc(100% - 32px), var(--max));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.86);
+      border-bottom: 1px solid rgba(16, 20, 24, 0.06);
+    }
+
+    .nav {
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      font-weight: 900;
+      color: #fff;
+      background: linear-gradient(135deg, var(--primary-deep), var(--primary));
+      box-shadow: 0 10px 22px rgba(13, 34, 30, 0.16);
+    }
+
+    .brand-copy {
+      min-width: 0;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+    }
+
+    .brand-copy small {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .nav-links a {
+      padding: 8px 0;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      height: 46px;
+      padding: 0 20px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid transparent;
+      font-size: 14px;
+      font-weight: 800;
+      transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--primary), var(--green));
+      box-shadow: 0 12px 24px rgba(21, 52, 47, 0.16);
+    }
+
+    .btn-secondary {
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.92);
+      border-color: rgba(16, 20, 24, 0.1);
+    }
+
+    .manual-home {
+      padding: 38px 0 22px;
+    }
+
+    .manual-head {
+      margin-bottom: 22px;
+    }
+
+    .manual-head h1 {
+      margin: 18px 0 12px;
+      font-size: clamp(42px, 5.2vw, 76px);
+      line-height: 0.96;
+      letter-spacing: -0.05em;
+      max-width: 760px;
+    }
+
+    .manual-head p {
+      max-width: 760px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.8;
+    }
+
+    .manual-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .manual-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 430px;
+      padding: 28px;
+      border-radius: var(--radius-xl);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+
+    .manual-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(16, 20, 24, 0.14);
+      box-shadow: 0 24px 46px rgba(18, 24, 32, 0.08);
+    }
+
+    .manual-card::before {
+      content: "";
+      position: absolute;
+      inset: 16px;
+      border-radius: 24px;
+      border: 1px solid rgba(16, 20, 24, 0.07);
+      pointer-events: none;
+    }
+
+    .manual-card.is-dark {
+      background: linear-gradient(145deg, var(--primary), var(--primary-deep));
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .manual-card.is-dark::before {
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .manual-card.is-dark .manual-code,
+    .manual-card.is-dark .manual-card p,
+    .manual-card.is-dark .manual-list li,
+    .manual-card.is-dark .manual-link {
+      color: rgba(255, 255, 255, 0.84);
+    }
+
+    .manual-card.is-dark .manual-link {
+      border-color: rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .manual-top {
+      position: relative;
+      z-index: 1;
+    }
+
+    .manual-code {
+      display: inline-flex;
+      margin-bottom: 18px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .manual-card h2 {
+      margin: 0 0 12px;
+      font-size: clamp(36px, 4vw, 60px);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+    }
+
+    .manual-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 16px;
+    }
+
+    .manual-panel {
+      position: relative;
+      z-index: 1;
+      margin-top: 28px;
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(16, 20, 24, 0.04);
+    }
+
+    .manual-card.is-dark .manual-panel {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .manual-panel strong {
+      display: block;
+      margin-bottom: 12px;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .manual-list {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .manual-list li {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .manual-link {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: fit-content;
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(16, 20, 24, 0.1);
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .showcase {
+      padding: 32px 0 18px;
+    }
+
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: 1.22fr 0.78fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .showcase-main {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 18px;
+      padding: 18px;
+      border-radius: var(--radius-xl);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      min-height: 620px;
+    }
+
+    .showcase-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 18px 10px 18px 12px;
+    }
+
+    h1 {
+      margin: 18px 0 12px;
+      font-size: clamp(42px, 5.2vw, 82px);
+      line-height: 0.96;
+      letter-spacing: -0.05em;
+      max-width: 560px;
+    }
+
+    .showcase-copy p {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.72;
+      color: var(--muted);
+    }
+
+    .showcase-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .showcase-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .meta-card,
+    .list-panel,
+    .detail-shell,
+    .detail-block,
+    .footer-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .meta-card {
+      padding: 16px;
+      border-radius: 18px;
+      background: var(--card);
+    }
+
+    .meta-card strong {
+      display: block;
+      font-size: 30px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .meta-card span {
+      display: block;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .showcase-visual {
+      position: relative;
+      min-height: 520px;
+      border-radius: 28px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.22), transparent 24%),
+        linear-gradient(145deg, #0f211d 0%, #214a41 56%, #b98749 140%);
+      padding: 18px;
+      display: flex;
+      align-items: end;
+    }
+
+    .showcase-visual::before {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      pointer-events: none;
+    }
+
+    .visual-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .visual-shell {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 484px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 1;
+    }
+
+    .court-frame {
+      position: relative;
+      flex: 1;
+      border-radius: 28px;
+      border: 1.5px solid rgba(255, 255, 255, 0.24);
+      overflow: hidden;
+      margin-top: 6px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+    }
+
+    .court-line {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.22);
+    }
+
+    .line-vertical {
+      width: 1.5px;
+      height: 100%;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+    }
+
+    .line-center-circle {
+      width: 148px;
+      height: 148px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.22);
+      background: transparent;
+    }
+
+    .line-box-left,
+    .line-box-right {
+      width: 110px;
+      height: 170px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 1.5px solid rgba(255, 255, 255, 0.22);
+      background: transparent;
+    }
+
+    .line-box-left {
+      left: 0;
+      border-left: none;
+    }
+
+    .line-box-right {
+      right: 0;
+      border-right: none;
+    }
+
+    .line-arc-left,
+    .line-arc-right {
+      width: 94px;
+      height: 94px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 1.5px solid rgba(255, 255, 255, 0.22);
+      border-radius: 50%;
+      background: transparent;
+    }
+
+    .line-arc-left {
+      left: 54px;
+      clip-path: inset(0 0 0 50%);
+    }
+
+    .line-arc-right {
+      right: 54px;
+      clip-path: inset(0 50% 0 0);
+    }
+
+    .marker {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.08);
+    }
+
+    .marker.gold {
+      background: #f0c38a;
+    }
+
+    .marker.white {
+      background: #ffffff;
+    }
+
+    .marker.m1 { top: 46%; left: 34%; }
+    .marker.m2 { top: 42%; left: 42%; }
+    .marker.m3 { top: 58%; left: 27%; }
+    .marker.m4 { top: 35%; left: 66%; }
+    .marker.m5 { top: 61%; left: 73%; }
+
+    .route {
+      position: absolute;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.78);
+      transform-origin: left center;
+    }
+
+    .route.r1 {
+      width: 116px;
+      left: 34%;
+      top: 47%;
+      transform: rotate(-18deg);
+    }
+
+    .route.r2 {
+      width: 148px;
+      left: 43%;
+      top: 43%;
+      transform: rotate(26deg);
+    }
+
+    .route.r3 {
+      width: 92px;
+      left: 28%;
+      top: 58%;
+      transform: rotate(-22deg);
+    }
+
+    .visual-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .visual-badges span {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.84);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .showcase-side {
+      display: grid;
+      gap: 18px;
+    }
+
+    .promo-card {
+      padding: 26px;
+      border-radius: 28px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      min-height: 194px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .promo-card.is-dark {
+      background: linear-gradient(145deg, var(--primary), var(--primary-deep));
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .promo-card.is-dark p,
+    .promo-card.is-dark span,
+    .promo-card.is-dark small {
+      color: rgba(255, 255, 255, 0.76);
+    }
+
+    .promo-card small {
+      display: inline-flex;
+      width: fit-content;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .promo-card.is-dark small {
+      background: rgba(255, 255, 255, 0.12);
+      color: rgba(255, 255, 255, 0.88);
+    }
+
+    .promo-card h3 {
+      margin: 12px 0 10px;
+      font-size: 30px;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .promo-card p,
+    .promo-card span {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .promo-card span {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .category-section {
+      padding-top: 10px;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .category-card {
+      border-radius: 28px;
+      overflow: hidden;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .category-visual {
+      aspect-ratio: 1 / 1.06;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .category-visual::before,
+    .category-visual::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      opacity: 0.88;
+    }
+
+    .visual-offense {
+      background: linear-gradient(145deg, #ece7d6, #f7f3e9);
+    }
+
+    .visual-offense::before {
+      width: 64%;
+      height: 64%;
+      background: linear-gradient(145deg, #214a41, #102821);
+      right: -8%;
+      top: 12%;
+      transform: rotate(-14deg);
+    }
+
+    .visual-offense::after {
+      width: 32%;
+      height: 32%;
+      border: 2px solid rgba(16, 20, 24, 0.12);
+      left: 14%;
+      bottom: 16%;
+    }
+
+    .visual-defense {
+      background: linear-gradient(145deg, #f4f1e6, #fffdf7);
+    }
+
+    .visual-defense::before {
+      width: 44%;
+      height: 78%;
+      background: linear-gradient(145deg, #b98749, #d9b27b);
+      left: 18%;
+      top: -8%;
+      transform: rotate(28deg);
+    }
+
+    .visual-defense::after {
+      width: 52%;
+      height: 52%;
+      border: 2px solid rgba(16, 20, 24, 0.12);
+      right: 10%;
+      bottom: 14%;
+    }
+
+    .visual-drill {
+      background: linear-gradient(145deg, #16342e, #214a41);
+    }
+
+    .visual-drill::before {
+      width: 42%;
+      height: 42%;
+      background: rgba(255, 255, 255, 0.12);
+      left: 16%;
+      top: 18%;
+    }
+
+    .visual-drill::after {
+      width: 58%;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.4);
+      right: 10%;
+      bottom: 28%;
+      transform: rotate(-22deg);
+    }
+
+    .visual-guide {
+      background: linear-gradient(145deg, #f5f0e4, #ece6d8);
+    }
+
+    .visual-guide::before {
+      width: 54%;
+      height: 54%;
+      background: linear-gradient(145deg, #ffffff, #f4f0e8);
+      left: 12%;
+      top: 12%;
+      box-shadow: 0 10px 24px rgba(16, 20, 24, 0.08);
+    }
+
+    .visual-guide::after {
+      width: 24%;
+      height: 24%;
+      background: var(--accent);
+      right: 16%;
+      bottom: 18%;
+    }
+
+    .category-copy {
+      padding: 18px 18px 20px;
+    }
+
+    .category-copy h3,
+    .featured-copy h3 {
+      margin: 0 0 8px;
+      font-size: 26px;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .category-copy p,
+    .featured-copy p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.72;
+    }
+
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .featured-card {
+      border-radius: 28px;
+      overflow: hidden;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .featured-visual {
+      aspect-ratio: 1.1 / 1;
+      position: relative;
+      padding: 20px;
+      display: flex;
+      align-items: end;
+      color: #fff;
+      font-size: 68px;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+    }
+
+    .featured-visual::after {
+      content: "";
+      position: absolute;
+      inset: 16px;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .featured-1 {
+      background: linear-gradient(145deg, #102821, #214a41 70%, #c69a60 140%);
+    }
+
+    .featured-2 {
+      background: linear-gradient(145deg, #1d1f25, #444a57 70%, #8ea0a5 140%);
+    }
+
+    .featured-3 {
+      background: linear-gradient(145deg, #efe8d8, #dcbf93);
+      color: #1a2528;
+    }
+
+    .featured-copy {
+      padding: 20px;
+    }
+
+    .mini-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .mini-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .text-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 18px;
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .section {
+      padding: 18px 0;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 20px;
+    }
+
+    .section-head h2 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 3.6vw, 48px);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .section-head p {
+      margin: 0;
+      max-width: 720px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .section-pill {
+      flex: 0 0 auto;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .detail-block h3,
+    .detail-title h3 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .detail-block p,
+    .detail-block li,
+    .detail-title p,
+    .footer-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .library {
+      padding: 18px 0 22px;
+    }
+
+    .library-shell {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .list-panel {
+      padding: 20px;
+      border-radius: 28px;
+      position: sticky;
+      top: 94px;
+    }
+
+    .panel-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .panel-top h3 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: -0.03em;
+    }
+
+    .panel-top span {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .group-tabs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .group-tab {
+      min-height: 52px;
+      padding: 0 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.58);
+      border: 1px solid rgba(18, 32, 42, 0.1);
+      font-weight: 900;
+      transition: background 180ms ease, transform 180ms ease, color 180ms ease, border-color 180ms ease;
+    }
+
+    .group-tab:hover {
+      transform: translateY(-1px);
+    }
+
+    .group-tab.is-active {
+      color: #fff;
+      background: linear-gradient(135deg, var(--primary), var(--green));
+      border-color: transparent;
+      box-shadow: 0 12px 24px rgba(23, 56, 71, 0.18);
+    }
+
+    .tactic-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .tactic-item {
+      width: 100%;
+      text-align: left;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(18, 32, 42, 0.1);
+      background: rgba(255, 255, 255, 0.55);
+      transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    }
+
+    .tactic-item:hover {
+      transform: translateY(-1px);
+      border-color: rgba(23, 56, 71, 0.24);
+    }
+
+    .tactic-item.is-active {
+      border-color: rgba(23, 56, 71, 0.2);
+      background: linear-gradient(145deg, rgba(23, 56, 71, 0.96), rgba(44, 90, 84, 0.92));
+      box-shadow: 0 16px 30px rgba(23, 56, 71, 0.18);
+      color: #edf3f5;
+    }
+
+    .tactic-item.is-active .item-type,
+    .tactic-item.is-active .item-desc {
+      color: rgba(237, 243, 245, 0.78);
+    }
+
+    .item-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .item-title strong {
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .item-type {
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .item-desc {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .detail-shell {
+      padding: 20px;
+      border-radius: 30px;
+    }
+
+    .detail-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: start;
+      margin-bottom: 18px;
+    }
+
+    .detail-title p {
+      max-width: 760px;
+    }
+
+    .detail-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      background: rgba(44, 90, 84, 0.08);
+      color: var(--green);
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .diagram-card {
+      border-radius: 24px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #183847 0%, #0f2630 100%);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 18px 30px rgba(15, 38, 48, 0.18);
+    }
+
+    .diagram-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 16px 18px 0;
+      color: rgba(237, 243, 245, 0.82);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .diagram-shell {
+      padding: 12px 14px 16px;
+    }
+
+    .diagram-box {
+      aspect-ratio: 5 / 3;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(9, 24, 30, 0.24), rgba(9, 24, 30, 0.18));
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+    }
+
+    .diagram-box svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .diagram-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 0 18px 18px;
+      color: rgba(237, 243, 245, 0.76);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .legend-offense {
+      background: #ffb55d;
+    }
+
+    .legend-defense {
+      background: #64c2c0;
+    }
+
+    .legend-route {
+      background: #fff;
+    }
+
+    .quick-card {
+      border-radius: 24px;
+      padding: 18px;
+      background: linear-gradient(145deg, rgba(255, 248, 240, 0.98), rgba(253, 247, 238, 0.9));
+      border: 1px solid rgba(18, 32, 42, 0.08);
+    }
+
+    .quick-card small {
+      display: inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+      color: var(--accent);
+      background: var(--accent-soft);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .quick-card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 24px;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+    }
+
+    .quick-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .detail-columns {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .detail-block {
+      padding: 20px;
+      border-radius: 24px;
+    }
+
+    .detail-block ul {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .drill-card {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 18px;
+      padding: 22px;
+      border-radius: 24px;
+      background: linear-gradient(145deg, rgba(23, 56, 71, 0.96), rgba(44, 90, 84, 0.96));
+      color: #edf3f5;
+      box-shadow: 0 20px 34px rgba(15, 38, 48, 0.22);
+    }
+
+    .drill-card small {
+      display: inline-flex;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      color: rgba(237, 243, 245, 0.82);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .drill-card h3 {
+      margin: 0 0 12px;
+      font-size: 28px;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .drill-card p,
+    .drill-card li {
+      color: rgba(237, 243, 245, 0.82);
+      line-height: 1.75;
+    }
+
+    .drill-card ul {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .footer {
+      padding: 16px 0 34px;
+    }
+
+    .footer-card {
+      padding: 24px;
+      border-radius: 28px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .footer-card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 24px;
+      letter-spacing: -0.03em;
+    }
+
+    .footer-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 1100px) {
+      .showcase-grid,
+      .showcase-main,
+      .library-shell,
+      .detail-grid,
+      .drill-card {
+        grid-template-columns: 1fr;
+      }
+
+      .manual-grid,
+      .category-grid,
+      .featured-grid,
+      .detail-columns {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .list-panel {
+        position: static;
+      }
+    }
+
+    @media (max-width: 780px) {
+      .nav {
+        flex-wrap: wrap;
+        padding: 12px 0;
+      }
+
+      .nav-links {
+        order: 3;
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 4px;
+      }
+
+      .showcase-main {
+        padding: 24px;
+      }
+
+      .manual-head h1,
+      h1 {
+        font-size: clamp(34px, 11vw, 56px);
+      }
+
+      .showcase-copy p {
+        font-size: 16px;
+      }
+
+      .showcase-meta,
+      .manual-grid,
+      .category-grid,
+      .featured-grid,
+      .detail-columns {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-title,
+      .section-head,
+      .footer-card {
+        flex-direction: column;
+        align-items: start;
+      }
+
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap nav">
+      <a class="brand" href="#top">
+        <div class="brand-mark">阵</div>
+        <div class="brand-copy">
+          <div class="brand-title">临场破阵</div>
+          <small>篮球战术信息库 · 教练应对参考台</small>
+        </div>
+      </a>
+      <nav class="nav-links">
+        <a href="#top">首页</a>
+        <a href="#library">战术库</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn btn-primary" href="#library">进入战术库</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="manual-home">
+      <div class="wrap">
+        <div class="manual-head">
+          <div class="eyebrow">Coach Playbook</div>
+          <h1>进攻战术 / 防守战术</h1>
+          <p>首页只保留两个模块入口。用户根据需要进入进攻或防守模块，再查看对应战术的详细预览。整体排版更接近教练备战手册，强调清楚、克制和可快速翻阅。</p>
+        </div>
+        <div class="manual-grid">
+          <button class="manual-card" type="button" data-home-group="offense">
+            <div class="manual-top">
+              <span class="manual-code">01 / OFFENSE MODULE</span>
+              <h2>进攻战术</h2>
+              <p>进入后集中查看挡拆、快攻和无球掩护三类核心进攻战术，适合先判断对手怎么发起进攻、哪里最容易制造空位。</p>
+              <div class="manual-panel">
+                <strong>模块内包含</strong>
+                <ul class="manual-list">
+                  <li>挡拆</li>
+                  <li>快攻</li>
+                  <li>无球掩护</li>
+                </ul>
+              </div>
+            </div>
+            <span class="manual-link">进入进攻模块</span>
+          </button>
+
+          <button class="manual-card is-dark" type="button" data-home-group="defense">
+            <div class="manual-top">
+              <span class="manual-code">02 / DEFENSE MODULE</span>
+              <h2>防守战术</h2>
+              <p>进入后集中查看联防、全场紧逼和区域夹击三类典型防守体系，适合先判断对手怎样施压、哪里最容易打乱进攻节奏。</p>
+              <div class="manual-panel">
+                <strong>模块内包含</strong>
+                <ul class="manual-list">
+                  <li>联防</li>
+                  <li>全场紧逼</li>
+                  <li>区域夹击</li>
+                </ul>
+              </div>
+            </div>
+            <span class="manual-link">进入防守模块</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="library" id="library">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>战术信息库</h2>
+            <p>先从首页进入进攻或防守模块。左侧是该模块下的战术列表，右侧是内容区。点击某个战术后，右侧会按统一顺序展示：战术示意图、战术特点、应对方法和训练小方案。</p>
+          </div>
+          <div class="section-pill">左侧查找 · 右侧阅读</div>
+        </div>
+
+        <div class="library-shell">
+          <aside class="list-panel">
+            <div class="panel-top">
+              <h3>选择战术</h3>
+              <span>进攻 3 项 / 防守 3 项</span>
+            </div>
+
+            <div class="group-tabs">
+              <button class="group-tab is-active" data-group="offense">对手进攻战术</button>
+              <button class="group-tab" data-group="defense">对手防守战术</button>
+            </div>
+
+            <div class="tactic-list" id="tacticList"></div>
+          </aside>
+
+          <section class="detail-shell" id="detailShell">
+            <div class="detail-title">
+              <div>
+                <div class="eyebrow" id="detailEyebrow">战术卡片</div>
+                <h2 id="detailName" style="margin: 16px 0 10px; font-size: clamp(30px, 4vw, 54px); line-height: 1; letter-spacing: -0.04em;">挡拆</h2>
+                <p id="detailIntro">页面加载中...</p>
+                <div class="detail-tags" id="detailTags"></div>
+              </div>
+              <div class="quick-card">
+                <small>教练速判卡</small>
+                <strong id="quickTitle">先看这里</strong>
+                <p id="quickText">页面加载中...</p>
+              </div>
+            </div>
+
+            <div class="detail-grid">
+              <div class="diagram-card">
+                <div class="diagram-head">
+                  <span>战术示意图</span>
+                  <span id="diagramLabel">图示</span>
+                </div>
+                <div class="diagram-shell">
+                  <div class="diagram-box" id="diagramBox"></div>
+                </div>
+                <div class="diagram-legend">
+                  <span class="legend-item"><i class="legend-dot legend-offense"></i> 进攻方</span>
+                  <span class="legend-item"><i class="legend-dot legend-defense"></i> 防守方</span>
+                  <span class="legend-item"><i class="legend-dot legend-route"></i> 跑动 / 传球路线</span>
+                </div>
+              </div>
+
+              <article class="detail-block">
+                <h3>战术特点</h3>
+                <ul id="featureList"></ul>
+              </article>
+            </div>
+
+            <div class="detail-columns">
+              <article class="detail-block">
+                <h3>应对方法</h3>
+                <ul id="responseList"></ul>
+              </article>
+              <article class="detail-block">
+                <h3>关键提醒</h3>
+                <ul id="focusList"></ul>
+              </article>
+            </div>
+
+            <article class="drill-card">
+              <div>
+                <small>训练小方案</small>
+                <h3 id="drillName">训练标题</h3>
+                <p id="drillGoal">训练目标</p>
+              </div>
+              <div>
+                <ul id="drillList"></ul>
+              </div>
+            </article>
+          </section>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-card">
+      <div>
+        <strong>临场破阵 · 篮球战术信息库</strong>
+        <p>静态 HTML 展示版，适合训练营课堂演示、创意展示和继续往下扩展。</p>
+      </div>
+      <div class="footer-actions">
+        <a class="btn btn-primary" href="#library">继续查战术</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const tactics = {
+      offense: [
+        {
+          id: "pick-roll",
+          name: "挡拆",
+          short: "持球人借掩护发起",
+          eyebrow: "对手进攻战术",
+          intro: "挡拆是最常见、也最容易连续制造优势的进攻方式。它的核心不只是一个掩护动作，而是通过持球人、掩护人和弱侧队友的联动，让防守在换防、夹击、延误和协防之间不断做选择。",
+          tags: ["高频战术", "中路常见", "容易制造错位"],
+          quickTitle: "先别只盯持球人，要把顺下和弱侧一起看住。",
+          quickText: "如果只顾着防持球突破，很容易被顺下吃掉篮下空间；如果协防慢一步，又会让弱侧空位出现。面对挡拆，最重要的是全队提前统一默认处理方式。",
+          diagramLabel: "中路挡拆基础示意",
+          features: [
+            "通常由后卫和内线在中路或侧翼发起，目标是创造突破路线、错位单打或顺下机会。",
+            "掩护人既可以顺下，也可以外弹；弱侧队友的站位会决定防守是否敢协防。",
+            "一旦防守沟通慢半拍，就会同时出现持球突破、顺下吃饼和外线空位三个问题。 "
+          ],
+          responses: [
+            "先统一全队默认策略，例如外线尽量挤过掩护、内线短时间延误，再迅速回到原位。",
+            "弱侧提前做好收缩准备，优先封住顺下路线，避免让掩护人直插篮下。",
+            "如果对方持球人投篮强，不能缩得过深；如果突破强，就要更早把他赶向边线或中距离。",
+            "当对方反复打同一侧挡拆时，可以临时改成换防或夹击，但一定要提前喊清楚。 "
+          ],
+          focus: [
+            "口令一定要统一，不要一个想换防、一个想挤过。",
+            "弱侧协防人不能站死，必须一边看球一边看顺下人。",
+            "外线防守人被掩护后要立刻追，不要停在原地等内线补。 "
+          ],
+          drillName: "2 对 2 挡拆防守轮转",
+          drillGoal: "用最短时间让外线、内线和弱侧协防人形成同一种处理思路。",
+          drillSteps: [
+            "分成后卫 + 内线两组，先从中路挡拆开始，连续进行 6 到 8 个回合。",
+            "教练每两回合切换一次要求，比如先挤过延误，再改成换防，逼队员学会快速反应。",
+            "每次回合结束都只问三个点：有没有喊出来、顺下有没有漏、持球人有没有被逼离舒适区域。 "
+          ],
+          diagram: {
+            type: "half",
+            markers: [
+              { x: 230, y: 175, label: "1", side: "offense" },
+              { x: 292, y: 162, label: "5", side: "offense" },
+              { x: 445, y: 120, label: "2", side: "offense" },
+              { x: 445, y: 240, label: "3", side: "offense" },
+              { x: 214, y: 175, label: "①", side: "defense" },
+              { x: 310, y: 168, label: "⑤", side: "defense" },
+              { x: 428, y: 120, label: "②", side: "defense" }
+            ],
+            arrows: [
+              { x1: 230, y1: 175, x2: 320, y2: 175, kind: "move" },
+              { x1: 292, y1: 162, x2: 356, y2: 248, kind: "move" },
+              { x1: 310, y1: 168, x2: 336, y2: 178, kind: "help" }
+            ],
+            screens: [
+              { x: 292, y: 162, w: 16, h: 42, rotate: -8, label: "掩护" }
+            ],
+            labels: [
+              { x: 350, y: 270, text: "顺下路线" },
+              { x: 320, y: 150, text: "持球突破" }
+            ]
+          }
+        },
+        {
+          id: "transition",
+          name: "快攻",
+          short: "抢节奏、打回防差",
+          eyebrow: "对手进攻战术",
+          intro: "快攻不只是跑得快，而是通过篮板、抢断或长传后的第一时间推进，把比赛节奏拉到防守还没完全落位之前。教练最怕的不是对手快，而是自己的回防层次完全乱掉。",
+          tags: ["转换进攻", "多打少", "节奏战术"],
+          quickTitle: "先保护篮下和中路，再去找人，不要一味追球。",
+          quickText: "对付快攻时，前两名回防队员的第一责任不是扑抢，而是先把篮下和中路站住。只要最危险的上篮路线被切断，后面的错位和补位才来得及发生。",
+          diagramLabel: "快攻推进基础示意",
+          features: [
+            "通常从防守成功、篮板保护或抢断开始，目标是在对方落位前创造上篮或空位投篮。",
+            "强队的快攻往往不只是一条直线冲刺，而是边路快下、中路跟进和外线埋伏同时发生。",
+            "如果我方前场出手后没人平衡回防，对方很容易连续利用转换机会拉开分差。 "
+          ],
+          responses: [
+            "前两名回防队员优先保护篮下和中路，先把最短得分路线封死。",
+            "第三名回防队员要立刻找外线最危险的接应点，尤其是底角和 45 度位置。",
+            "进攻结束后要有固定的回防责任分工，不能所有人都去冲前场篮板。",
+            "尽量减少活球失误，因为很多快攻其实是由自己的传球错误直接送给对方的。 "
+          ],
+          focus: [
+            "先退再找人，不要边回防边犹豫。",
+            "中路必须有人站住，否则对方第一拍就会直接上篮。",
+            "如果已经形成 2 打 1，不要赌抢断，先拖住持球人等队友回来。 "
+          ],
+          drillName: "3 打 2 转换回防练习",
+          drillGoal: "让队员养成先站危险区域、再完成对位的回防习惯。",
+          drillSteps: [
+            "用 3 名进攻队员对 2 名回防队员，从半场或前场篮板后立刻发起转换。",
+            "要求回防方第一时间占住中路和篮下，第三人随后补回外线。",
+            "每轮结束后只看三件事：中路是否有人、有没有被一传打穿、外线射手有没有被完全漏掉。 "
+          ],
+          diagram: {
+            type: "full",
+            markers: [
+              { x: 150, y: 185, label: "1", side: "offense" },
+              { x: 255, y: 95, label: "2", side: "offense" },
+              { x: 262, y: 270, label: "3", side: "offense" },
+              { x: 365, y: 145, label: "①", side: "defense" },
+              { x: 365, y: 225, label: "②", side: "defense" }
+            ],
+            arrows: [
+              { x1: 150, y1: 185, x2: 435, y2: 185, kind: "move" },
+              { x1: 255, y1: 95, x2: 490, y2: 110, kind: "move" },
+              { x1: 262, y1: 270, x2: 488, y2: 250, kind: "move" },
+              { x1: 365, y1: 145, x2: 440, y2: 160, kind: "help" },
+              { x1: 365, y1: 225, x2: 440, y2: 210, kind: "help" }
+            ],
+            labels: [
+              { x: 430, y: 150, text: "先守中路" },
+              { x: 480, y: 90, text: "边路快下" }
+            ]
+          }
+        },
+        {
+          id: "off-ball-screen",
+          name: "无球掩护",
+          short: "给射手和空切制造空间",
+          eyebrow: "对手进攻战术",
+          intro: "无球掩护经常出现在底线、侧翼和弧顶连续配合中。它最容易让防守人盯着球却忘了身后的人，结果不是被射手拉出空位，就是被反跑空切直接穿透。",
+          tags: ["连续跑位", "射手友好", "考验沟通"],
+          quickTitle: "先看人和掩护方向，不要只盯着球飞到哪里。",
+          quickText: "无球掩护真正伤人的地方在于防守人的视线和身体位置。如果始终只盯球，很容易被下掩护、双掩护或反跑骗出空位。要提早识别掩护路线并喊出来。",
+          diagramLabel: "侧翼无球掩护示意",
+          features: [
+            "常见形式包括底线掩护、双掩护、交叉跑位和电梯门等，目的是给射手或空切人创造一步空间。",
+            "对方如果有稳定投手，无球掩护往往比持球单打更难防，因为球还没到人已经先跑开了。",
+            "这种战术特别考验弱侧防守的视线转换、身体接触和提前沟通。 "
+          ],
+          responses: [
+            "提前喊出掩护来向，决定是追、换、穿还是提前顶住目标人路线。",
+            "对重点射手要尽量让他接球更难，而不是等他接到球后才补过去。",
+            "弱侧协防人要时刻防空切，一旦所有人都被外线跑位吸走，篮下就会被打穿。",
+            "训练中要反复要求队员建立身体接触感，不能被一个掩护轻易甩开。 "
+          ],
+          focus: [
+            "人和球都要兼顾，防守人不能完全背对无球跑位人。",
+            "如果选择换防，换完之后要立刻重新站稳，不要出现两人都去追同一个人。",
+            "重点射手宁可让他绕远一点，也不要轻松从掩护后直接出来接球。 "
+          ],
+          drillName: "4 人绕掩护追防练习",
+          drillGoal: "让防守人学会在无球环境里也能及时喊、及时追、及时换。",
+          drillSteps: [
+            "设置一名射手、一名掩护人、两名防守人，从侧翼和底线轮流跑出接球路线。",
+            "防守方根据教练口令选择追防或换防，但无论哪种方式都要先喊出来再移动。",
+            "每组练完后马上复盘：接球点是不是被放得太轻松、有没有人完全失去身体接触。 "
+          ],
+          diagram: {
+            type: "half",
+            markers: [
+              { x: 445, y: 180, label: "1", side: "offense" },
+              { x: 260, y: 240, label: "2", side: "offense" },
+              { x: 312, y: 212, label: "4", side: "offense" },
+              { x: 425, y: 178, label: "①", side: "defense" },
+              { x: 245, y: 242, label: "②", side: "defense" },
+              { x: 330, y: 212, label: "④", side: "defense" }
+            ],
+            arrows: [
+              { x1: 260, y1: 240, x2: 355, y2: 148, kind: "move" },
+              { x1: 445, y1: 180, x2: 370, y2: 150, kind: "pass" },
+              { x1: 245, y1: 242, x2: 338, y2: 154, kind: "help" }
+            ],
+            screens: [
+              { x: 312, y: 212, w: 18, h: 44, rotate: 25, label: "掩护" }
+            ],
+            labels: [
+              { x: 360, y: 132, text: "接球点" },
+              { x: 214, y: 268, text: "射手起跑" }
+            ]
+          }
+        }
+      ],
+      defense: [
+        {
+          id: "zone-defense",
+          name: "联防",
+          short: "保护篮下、诱导外投",
+          eyebrow: "对手防守战术",
+          intro: "联防的核心不是“每个人站一块区域”这么简单，而是通过区域守位来保护篮下、切断直线突破，并把你想打的节奏改成它想让你打的节奏。对教练来说，破联防最怕的不是没战术，而是不知道该从哪里发力。",
+          tags: ["区域防守", "保护禁区", "考验转移球"],
+          quickTitle: "先打中间和短角，再用快速转移把联防拉开。",
+          quickText: "面对联防时，如果一直在外线横着传、停着看，就会正中对方下怀。更有效的方式通常是先把球送进高位或短角，再借快速转移和内外结合把防线扯开。",
+          diagramLabel: "2-3 联防基础示意",
+          features: [
+            "联防通过区域站位保护篮下和中路，常见目标是逼你多做外线传导、少做有效突破。",
+            "它往往鼓励你在不舒服的节奏下急投，尤其是当球始终碰不到罚球线附近的时候。",
+            "联防的薄弱区域通常在高位、短角和底线快速转移后形成的二次空档。 "
+          ],
+          responses: [
+            "优先想办法把球送到罚球线附近的高位，再根据协防收缩做二次分球。",
+            "让底线球员持续在短角活动，迫使底线防守人做选择。",
+            "减少无意义的横向慢传，转移球要快，必要时通过内外传切连续调动联防。",
+            "如果对方联防外扩很大，可以用底线切入和弱侧空切直接攻击身后区域。 "
+          ],
+          focus: [
+            "破联防不是只靠投三分，关键是先让防线收缩后再出球。",
+            "高位接应人必须敢接、敢转身、敢再分球，否则联防不会真正被撕开。",
+            "一旦对方底线防守人被吸上来，短角和篮下的空位要马上惩罚。 "
+          ],
+          drillName: "5 人破 2-3 联防传切练习",
+          drillGoal: "让队员习惯先找到联防薄弱区，再快速完成内外二次传导。",
+          drillSteps: [
+            "以 5 人对 5 人或 5 人对 4 人形式练习，从球到高位或短角开始发起。",
+            "要求每次进攻至少完成一次高位触球或短角接应后才能出手。",
+            "训练结束后只复盘三件事：有没有先碰薄弱点、转移够不够快、出手是不是来自真正空档。 "
+          ],
+          diagram: {
+            type: "half",
+            markers: [
+              { x: 460, y: 180, label: "1", side: "offense" },
+              { x: 320, y: 145, label: "4", side: "offense" },
+              { x: 415, y: 260, label: "5", side: "offense" },
+              { x: 270, y: 120, label: "①", side: "defense" },
+              { x: 270, y: 240, label: "②", side: "defense" },
+              { x: 180, y: 115, label: "③", side: "defense" },
+              { x: 180, y: 180, label: "④", side: "defense" },
+              { x: 180, y: 245, label: "⑤", side: "defense" }
+            ],
+            arrows: [
+              { x1: 460, y1: 180, x2: 320, y2: 145, kind: "pass" },
+              { x1: 320, y1: 145, x2: 415, y2: 260, kind: "pass" },
+              { x1: 270, y1: 120, x2: 310, y2: 145, kind: "help" }
+            ],
+            zones: [
+              { x: 150, y: 88, w: 78, h: 52, label: "底线区" },
+              { x: 150, y: 150, w: 90, h: 60, label: "中路区" },
+              { x: 150, y: 226, w: 78, h: 52, label: "底线区" },
+              { x: 245, y: 108, w: 78, h: 60, label: "高位" },
+              { x: 245, y: 194, w: 78, h: 60, label: "高位" }
+            ],
+            labels: [
+              { x: 328, y: 130, text: "高位接应" },
+              { x: 420, y: 284, text: "短角终结" }
+            ]
+          }
+        },
+        {
+          id: "full-court-press",
+          name: "全场紧逼",
+          short: "从后场开始施压",
+          eyebrow: "对手防守战术",
+          intro: "全场紧逼的价值不只是抢断，更在于打乱你的节奏、耗掉出球时间、逼你把原本该稳定推进的回合变成慌乱处理。面对这种防守，最重要的是让队员清楚出球路线和接应层次，而不是一慌就单打带球硬过。",
+          tags: ["全场压力", "压节奏", "逼后场失误"],
+          quickTitle: "先把接应层次站出来，再把球送到中间，不要自己把自己运进死角。",
+          quickText: "破全场紧逼最怕两件事：一是接应人都停着不动，二是持球人一紧张就把自己运到边线和角落。真正有效的办法是提前拉开层次，让中间接应点尽快出现。",
+          diagramLabel: "全场紧逼出球示意",
+          features: [
+            "通常在发边线球、发底线球或我方后场推进阶段施压，目标是延缓推进或直接制造失误。",
+            "强队会利用边线和中线当作“天然第三名防守人”，把持球人逼进狭窄空间。",
+            "如果接应层次不清楚，后场持球人很容易因为没有第二点和第三点选择而被围死。 "
+          ],
+          responses: [
+            "发球前就要把第一接应、第二接应和中间安全点的位置站好。",
+            "一旦突破第一道压力，优先把球送到中间区域，再利用转移球攻击身后空档。",
+            "持球人不要盲目连续运球找突破，更不要主动把自己运到边线和底角。",
+            "如果对方频繁夹击，可以用反跑、回传和长传结合，把防守压出来后的身后空间打掉。 "
+          ],
+          focus: [
+            "接应人必须主动迎球，不能站在原地等球来。",
+            "中间接应点是关键，没有中间点就很难真正破掉全场紧逼。",
+            "过半场不是终点，过半场后第一传也要稳，否则容易被二次追压。 "
+          ],
+          drillName: "4 人破全场紧逼出球练习",
+          drillGoal: "让队员形成发球、第一接应、中间接应和前场转移的固定层次。",
+          drillSteps: [
+            "用 4 名进攻队员对 4 名防守队员，从底线发球开始，练习完整推进到前场。",
+            "要求每次推进都必须经过中间安全点一次，不能只靠边线连续运球硬带。",
+            "每轮结束后检查三个问题：发球有没有备选点、持球人有没有被逼进死角、过半场后的第一传稳不稳。 "
+          ],
+          diagram: {
+            type: "full",
+            markers: [
+              { x: 90, y: 180, label: "1", side: "offense" },
+              { x: 155, y: 110, label: "2", side: "offense" },
+              { x: 210, y: 185, label: "3", side: "offense" },
+              { x: 310, y: 185, label: "4", side: "offense" },
+              { x: 122, y: 178, label: "①", side: "defense" },
+              { x: 180, y: 118, label: "②", side: "defense" },
+              { x: 244, y: 190, label: "③", side: "defense" }
+            ],
+            arrows: [
+              { x1: 90, y1: 180, x2: 155, y2: 110, kind: "pass" },
+              { x1: 155, y1: 110, x2: 310, y2: 185, kind: "pass" },
+              { x1: 122, y1: 178, x2: 156, y2: 138, kind: "help" },
+              { x1: 244, y1: 190, x2: 292, y2: 186, kind: "help" }
+            ],
+            labels: [
+              { x: 312, y: 168, text: "中间安全点" },
+              { x: 176, y: 86, text: "第一接应" }
+            ]
+          }
+        },
+        {
+          id: "trap-defense",
+          name: "区域夹击",
+          short: "把球逼到边线后围困",
+          eyebrow: "对手防守战术",
+          intro: "区域夹击不是满场乱扑，而是有目的地把球引到某个区域后再突然包夹。它最常出现在边线、角落或底线附近，利用场地边界把持球人困住，再由后方防守轮转去断你的下一传。",
+          tags: ["包夹", "边线危险", "逼失误"],
+          quickTitle: "别等夹击成形后才想传，最好在夹击来之前就把球送出去。",
+          quickText: "区域夹击最危险的不是两个人围你这一瞬间，而是你已经停球、转不动身、队友又没有提前站出安全接应点。要破解它，必须让队友在中间和弱侧提早出现。",
+          diagramLabel: "边线夹击基础示意",
+          features: [
+            "夹击往往在边线、底角或持球人转身受限的位置突然发生，目的是逼迫停球和盲目传球。",
+            "它通常配合后方轮转和断传路线使用，所以真正被针对的往往是你的第二传和第三传选择。",
+            "如果弱侧完全不动，夹击方就能放心把场地一侧完全锁死。 "
+          ],
+          responses: [
+            "在夹击还没合上之前，尽快用短传或提前传把球送到中间安全点。",
+            "队友不能只在强侧围观，弱侧必须主动拉开并准备接长传转移。",
+            "持球人一旦被逼停，也要先稳住重心，利用假动作和转身寻找最近且最安全的接应点。",
+            "如果成功出球到中间，下一拍要快速再转移，不要又把球带回原来那一侧。 "
+          ],
+          focus: [
+            "任何时候都要让持球人知道：中间有人、弱侧有人、回传有人。",
+            "别把球主动运到边线死角，很多夹击其实是自己先把自己带进去的。",
+            "第一传破夹击后，第二传要更果断，否则防守又会重新合围。 "
+          ],
+          drillName: "3 点接应破夹击练习",
+          drillGoal: "让持球人和无球队员同时建立破夹击的路线感和先后顺序。",
+          drillSteps: [
+            "设置边线持球点、中间安全点和弱侧转移点，由两名防守人从边线发起夹击。",
+            "要求持球人在停球前就优先找中间接应，接到球后再快速转移到弱侧。",
+            "每轮练完后复盘三件事：夹击来之前有没有提前判断、第一传是否安全、第二传是否真正形成优势。 "
+          ],
+          diagram: {
+            type: "half",
+            markers: [
+              { x: 446, y: 100, label: "1", side: "offense" },
+              { x: 320, y: 182, label: "3", side: "offense" },
+              { x: 228, y: 248, label: "2", side: "offense" },
+              { x: 426, y: 122, label: "①", side: "defense" },
+              { x: 438, y: 82, label: "②", side: "defense" },
+              { x: 338, y: 168, label: "③", side: "defense" }
+            ],
+            arrows: [
+              { x1: 446, y1: 100, x2: 320, y2: 182, kind: "pass" },
+              { x1: 320, y1: 182, x2: 228, y2: 248, kind: "pass" },
+              { x1: 426, y1: 122, x2: 446, y2: 110, kind: "help" },
+              { x1: 438, y1: 82, x2: 446, y2: 96, kind: "help" }
+            ],
+            labels: [
+              { x: 458, y: 70, text: "边线夹击" },
+              { x: 318, y: 160, text: "中间安全点" },
+              { x: 198, y: 270, text: "弱侧转移" }
+            ]
+          }
+        }
+      ]
+    };
+
+    const state = {
+      group: "offense",
+      tacticId: "pick-roll"
+    };
+
+    const tacticList = document.getElementById("tacticList");
+    const detailEyebrow = document.getElementById("detailEyebrow");
+    const detailName = document.getElementById("detailName");
+    const detailIntro = document.getElementById("detailIntro");
+    const detailTags = document.getElementById("detailTags");
+    const quickTitle = document.getElementById("quickTitle");
+    const quickText = document.getElementById("quickText");
+    const diagramLabel = document.getElementById("diagramLabel");
+    const diagramBox = document.getElementById("diagramBox");
+    const featureList = document.getElementById("featureList");
+    const responseList = document.getElementById("responseList");
+    const focusList = document.getElementById("focusList");
+    const drillName = document.getElementById("drillName");
+    const drillGoal = document.getElementById("drillGoal");
+    const drillList = document.getElementById("drillList");
+    const groupTabs = Array.from(document.querySelectorAll(".group-tab"));
+    const homeGroupButtons = Array.from(document.querySelectorAll("[data-home-group]"));
+    const librarySection = document.getElementById("library");
+
+    function getCurrentTactics() {
+      return tactics[state.group];
+    }
+
+    function getCurrentTactic() {
+      return getCurrentTactics().find((item) => item.id === state.tacticId) || getCurrentTactics()[0];
+    }
+
+    function renderList() {
+      const items = getCurrentTactics();
+      tacticList.innerHTML = items.map((item) => `
+        <button class="tactic-item ${item.id === state.tacticId ? "is-active" : ""}" data-id="${item.id}">
+          <div class="item-title">
+            <strong>${item.name}</strong>
+            <span class="item-type">${state.group === "offense" ? "进攻" : "防守"}</span>
+          </div>
+          <div class="item-desc">${item.short}</div>
+        </button>
+      `).join("");
+
+      tacticList.querySelectorAll(".tactic-item").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.tacticId = button.dataset.id;
+          renderList();
+          renderDetail();
+        });
+      });
+    }
+
+    function renderListItems(target, items) {
+      target.innerHTML = items.map((text) => `<li>${text.trim()}</li>`).join("");
+    }
+
+    function renderTags(tags) {
+      detailTags.innerHTML = tags.map((tag) => `<span class="tag">${tag}</span>`).join("");
+    }
+
+    function renderDiagram(diagram) {
+      const svg = diagram.type === "full" ? renderFullCourt(diagram) : renderHalfCourt(diagram);
+      diagramBox.innerHTML = svg;
+    }
+
+    function renderMarkers(markers) {
+      return markers.map((marker) => {
+        const fill = marker.side === "offense" ? "#ffb55d" : "#64c2c0";
+        const textColor = marker.side === "offense" ? "#173847" : "#ffffff";
+        return `
+          <g>
+            <circle cx="${marker.x}" cy="${marker.y}" r="15" fill="${fill}" stroke="rgba(255,255,255,0.3)" stroke-width="2"></circle>
+            <text x="${marker.x}" y="${marker.y + 5}" text-anchor="middle" font-size="14" font-weight="800" fill="${textColor}">${marker.label}</text>
+          </g>
+        `;
+      }).join("");
+    }
+
+    function renderArrows(arrows) {
+      return arrows.map((arrow, index) => {
+        const color = arrow.kind === "pass" ? "#ffe38d" : arrow.kind === "help" ? "#64c2c0" : "#ffffff";
+        const dash = arrow.kind === "help" ? "8 6" : arrow.kind === "pass" ? "10 8" : "0";
+        return `
+          <g>
+            <line x1="${arrow.x1}" y1="${arrow.y1}" x2="${arrow.x2}" y2="${arrow.y2}" stroke="${color}" stroke-width="4" ${dash === "0" ? "" : `stroke-dasharray="${dash}"`} marker-end="url(#arrowHead${index})"></line>
+            <defs>
+              <marker id="arrowHead${index}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="${color}"></path>
+              </marker>
+            </defs>
+          </g>
+        `;
+      }).join("");
+    }
+
+    function renderScreens(screens) {
+      if (!screens) return "";
+      return screens.map((screen) => `
+        <g transform="rotate(${screen.rotate || 0} ${screen.x} ${screen.y})">
+          <rect x="${screen.x - screen.w / 2}" y="${screen.y - screen.h / 2}" width="${screen.w}" height="${screen.h}" rx="5" fill="rgba(255,255,255,0.14)" stroke="#ffffff" stroke-width="2"></rect>
+          ${screen.label ? `<text x="${screen.x + 16}" y="${screen.y - 10}" fill="#edf3f5" font-size="12" font-weight="700">${screen.label}</text>` : ""}
+        </g>
+      `).join("");
+    }
+
+    function renderLabels(labels) {
+      return labels.map((label) => `
+        <text x="${label.x}" y="${label.y}" fill="rgba(237,243,245,0.9)" font-size="13" font-weight="700">${label.text}</text>
+      `).join("");
+    }
+
+    function renderZones(zones) {
+      if (!zones) return "";
+      return zones.map((zone) => `
+        <g>
+          <rect x="${zone.x}" y="${zone.y}" width="${zone.w}" height="${zone.h}" rx="12" fill="rgba(255,181,93,0.12)" stroke="rgba(255,181,93,0.4)" stroke-width="1.5"></rect>
+          <text x="${zone.x + zone.w / 2}" y="${zone.y + zone.h / 2 + 4}" text-anchor="middle" fill="rgba(255,229,173,0.95)" font-size="12" font-weight="700">${zone.label}</text>
+        </g>
+      `).join("");
+    }
+
+    function halfCourtBase() {
+      return `
+        <rect x="30" y="30" width="540" height="300" rx="18" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.18)" stroke-width="2"></rect>
+        <rect x="30" y="108" width="115" height="144" rx="10" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="2"></rect>
+        <circle cx="145" cy="180" r="56" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="2"></circle>
+        <circle cx="92" cy="180" r="7" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="2"></circle>
+        <path d="M 145 55 A 165 165 0 0 1 145 305" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="2"></path>
+        <line x1="570" y1="30" x2="570" y2="330" stroke="rgba(255,255,255,0.12)" stroke-width="2"></line>
+      `;
+    }
+
+    function fullCourtBase() {
+      return `
+        <rect x="30" y="30" width="540" height="300" rx="18" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.18)" stroke-width="2"></rect>
+        <line x1="300" y1="30" x2="300" y2="330" stroke="rgba(255,255,255,0.18)" stroke-width="2"></line>
+        <circle cx="300" cy="180" r="44" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="2"></circle>
+        <rect x="30" y="108" width="90" height="144" rx="10" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="2"></rect>
+        <rect x="480" y="108" width="90" height="144" rx="10" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="2"></rect>
+        <circle cx="120" cy="180" r="46" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="2"></circle>
+        <circle cx="480" cy="180" r="46" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="2"></circle>
+        <circle cx="72" cy="180" r="7" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="2"></circle>
+        <circle cx="528" cy="180" r="7" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="2"></circle>
+      `;
+    }
+
+    function renderHalfCourt(diagram) {
+      return `
+        <svg viewBox="0 0 600 360" role="img" aria-label="${diagram.label || "半场战术图"}">
+          ${halfCourtBase()}
+          ${renderZones(diagram.zones)}
+          ${renderArrows(diagram.arrows)}
+          ${renderScreens(diagram.screens)}
+          ${renderMarkers(diagram.markers)}
+          ${renderLabels(diagram.labels)}
+        </svg>
+      `;
+    }
+
+    function renderFullCourt(diagram) {
+      return `
+        <svg viewBox="0 0 600 360" role="img" aria-label="${diagram.label || "全场战术图"}">
+          ${fullCourtBase()}
+          ${renderZones(diagram.zones)}
+          ${renderArrows(diagram.arrows)}
+          ${renderScreens(diagram.screens)}
+          ${renderMarkers(diagram.markers)}
+          ${renderLabels(diagram.labels)}
+        </svg>
+      `;
+    }
+
+    function renderDetail() {
+      const tactic = getCurrentTactic();
+      detailEyebrow.textContent = tactic.eyebrow;
+      detailName.textContent = tactic.name;
+      detailIntro.textContent = tactic.intro;
+      quickTitle.textContent = tactic.quickTitle;
+      quickText.textContent = tactic.quickText;
+      diagramLabel.textContent = tactic.diagramLabel;
+      renderTags(tactic.tags);
+      renderListItems(featureList, tactic.features);
+      renderListItems(responseList, tactic.responses);
+      renderListItems(focusList, tactic.focus);
+      drillName.textContent = tactic.drillName;
+      drillGoal.textContent = tactic.drillGoal;
+      renderListItems(drillList, tactic.drillSteps);
+      renderDiagram(tactic.diagram);
+    }
+
+    groupTabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const nextGroup = tab.dataset.group;
+        if (nextGroup === state.group) return;
+        state.group = nextGroup;
+        state.tacticId = tactics[nextGroup][0].id;
+        groupTabs.forEach((item) => item.classList.toggle("is-active", item === tab));
+        renderList();
+        renderDetail();
+      });
+    });
+
+    homeGroupButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const nextGroup = button.dataset.homeGroup;
+        state.group = nextGroup;
+        state.tacticId = tactics[nextGroup][0].id;
+        groupTabs.forEach((item) => item.classList.toggle("is-active", item.dataset.group === nextGroup));
+        renderList();
+        renderDetail();
+        librarySection.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    renderList();
+    renderDetail();
+  </script>
+</body>
+</html>

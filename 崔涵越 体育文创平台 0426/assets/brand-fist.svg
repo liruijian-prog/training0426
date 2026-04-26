@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="体育IP衍生品共创平台头像">
+  <defs>
+    <linearGradient id="fistGradient" x1="86" y1="386" x2="430" y2="108" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#06476A"/>
+      <stop offset="1" stop-color="#09B7A8"/>
+    </linearGradient>
+    <linearGradient id="bgGradient" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ECFFFA"/>
+      <stop offset="1" stop-color="#DFF9F4"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#bgGradient)"/>
+  <g fill="none" stroke="url(#fistGradient)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M114 286c32-62 78-96 138-104 18-2 30 5 33 20 3 13-4 25-21 30l-33 9 54 32c17 10 22 29 12 45-10 17-30 22-47 11l-58-35-27 63c-8 19-29 28-47 20-19-8-27-30-18-49l14-42Z" fill="url(#fistGradient)" stroke-width="10"/>
+    <path d="M398 286c-32-62-78-96-138-104-18-2-30 5-33 20-3 13 4 25 21 30l33 9-54 32c-17 10-22 29-12 45 10 17 30 22 47 11l58-35 27 63c8 19 29 28 47 20 19-8 27-30 18-49l-14-42Z" fill="url(#fistGradient)" stroke-width="10"/>
+    <path d="M157 147c-38 16-68 43-91 82" stroke-width="13"/>
+    <path d="M355 147c38 16 68 43 91 82" stroke-width="13"/>
+    <path d="M181 378c46 18 98 19 151 0" stroke-width="12"/>
+    <path d="M204 401c34 10 70 10 107 0" stroke-width="9"/>
+    <path d="M211 116c35-10 66-10 101 0" stroke-width="12"/>
+    <path d="M233 96c19-4 40-4 59 0" stroke-width="9"/>
+  </g>
+</svg>

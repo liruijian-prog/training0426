@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+{% block title %}球员详情 #{{ player["player_id"] }}{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <div>
+      <h1 class="h1">球员详情 <span class="muted">#{{ player["player_id"] }}</span></h1>
+      <p class="muted mono">{{ player["national_id"] }} · {{ player["player_type"] }}</p>
+    </div>
+    <div class="actions">
+      <a class="btn btn--ghost" href="{{ url_for('players_list') }}">返回列表</a>
+      <a class="btn" href="{{ url_for('players_edit', player_id=player['player_id']) }}">编辑</a>
+      <form method="post" action="{{ url_for('players_delete', player_id=player['player_id']) }}" style="display:inline;">
+        <button class="btn btn--danger" type="submit" onclick="return confirm('确认删除该球员？');">删除</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card__header">
+        <h2 class="h2">基本信息</h2>
+      </div>
+      <div class="card__body">
+        <div class="kv">
+          <div><span>单位</span><b>{{ player["organization"] or "" }}</b></div>
+          <div><span>民族</span><b>{{ player["ethnicity"] or "" }}</b></div>
+          <div><span>出生地</span><b>{{ player["birthplace"] or "" }}</b></div>
+          <div><span>年龄</span><b>{{ player["age"] if player["age"] is not none else "" }}</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card__header">
+        <h2 class="h2">身体数据</h2>
+      </div>
+      <div class="card__body">
+        <form class="form" method="post" action="{{ url_for('profile_update', player_id=player['player_id']) }}">
+          <div class="grid">
+            <label><span>身高(cm)</span><input name="height_cm" value="{{ profile['height_cm'] if profile else '' }}"/></label>
+            <label><span>体重(kg)</span><input name="weight_kg" value="{{ profile['weight_kg'] if profile else '' }}"/></label>
+            <label><span>鞋码</span><input name="shoe_size" value="{{ profile['shoe_size'] if profile else '' }}"/></label>
+            <label><span>衣服尺码</span><input name="clothing_size" value="{{ profile['clothing_size'] if profile else '' }}"/></label>
+          </div>
+          <div class="form__footer">
+            <button class="btn btn--primary" type="submit">保存</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card__header">
+        <h2 class="h2">家庭信息</h2>
+      </div>
+      <div class="card__body">
+        <form class="form" method="post" action="{{ url_for('family_update', player_id=player['player_id']) }}">
+          <div class="grid">
+            <label><span>父亲姓名</span><input name="father_name" value="{{ family['father_name'] if family else '' }}"/></label>
+            <label><span>母亲姓名</span><input name="mother_name" value="{{ family['mother_name'] if family else '' }}"/></label>
+            <label><span>婚姻状况</span><input name="marital_status" value="{{ family['marital_status'] if family else '' }}"/></label>
+          </div>
+          <div class="form__footer">
+            <button class="btn btn--primary" type="submit">保存</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card__header">
+        <h2 class="h2">子女</h2>
+      </div>
+      <div class="card__body">
+        <form class="form" method="post" action="{{ url_for('child_add', player_id=player['player_id']) }}">
+          <div class="grid">
+            <label><span>孩子姓名 *</span><input name="child_name" required /></label>
+            <label><span>孩子年龄</span><input name="child_age" /></label>
+          </div>
+          <div class="form__footer">
+            <button class="btn btn--primary" type="submit">添加</button>
+          </div>
+        </form>
+        <table class="table table--compact">
+          <thead><tr><th>ID</th><th>姓名</th><th>年龄</th><th style="width:120px;">操作</th></tr></thead>
+          <tbody>
+            {% if children|length == 0 %}
+              <tr><td class="muted" colspan="4">暂无</td></tr>
+            {% else %}
+              {% for c in children %}
+                <tr>
+                  <td>{{ c["child_id"] }}</td>
+                  <td>{{ c["child_name"] }}</td>
+                  <td>{{ c["child_age"] if c["child_age"] is not none else "" }}</td>
+                  <td>
+                    <form method="post" action="{{ url_for('child_delete', child_id=c['child_id']) }}">
+                      <input type="hidden" name="player_id" value="{{ player['player_id'] }}" />
+                      <button class="btn btn--small btn--danger" type="submit" onclick="return confirm('确认删除？');">删除</button>
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card__header">
+        <h2 class="h2">配偶/婚姻记录</h2>
+      </div>
+      <div class="card__body">
+        <form class="form" method="post" action="{{ url_for('spouse_add', player_id=player['player_id']) }}">
+          <div class="grid">
+            <label><span>配偶姓名 *</span><input name="spouse_name" required /></label>
+            <label><span>配偶国籍</span><input name="spouse_nationality" /></label>
+            <label>
+              <span>是否当前</span>
+              <select name="is_current">
+                <option value="1" selected>是</option>
+                <option value="0">否</option>
+              </select>
+            </label>
+          </div>
+          <div class="form__footer">
+            <button class="btn btn--primary" type="submit">添加</button>
+          </div>
+        </form>
+        <table class="table table--compact">
+          <thead><tr><th>ID</th><th>姓名</th><th>国籍</th><th>当前</th><th style="width:120px;">操作</th></tr></thead>
+          <tbody>
+            {% if spouses|length == 0 %}
+              <tr><td class="muted" colspan="5">暂无</td></tr>
+            {% else %}
+              {% for s in spouses %}
+                <tr>
+                  <td>{{ s["spouse_id"] }}</td>
+                  <td>{{ s["spouse_name"] }}</td>
+                  <td>{{ s["spouse_nationality"] or "" }}</td>
+                  <td>{{ "是" if s["is_current"] == 1 else "否" }}</td>
+                  <td>
+                    <form method="post" action="{{ url_for('spouse_delete', spouse_id=s['spouse_id']) }}">
+                      <input type="hidden" name="player_id" value="{{ player['player_id'] }}" />
+                      <button class="btn btn--small btn--danger" type="submit" onclick="return confirm('确认删除？');">删除</button>
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card__header">
+        <h2 class="h2">护照</h2>
+      </div>
+      <div class="card__body">
+        <form class="form" method="post" action="{{ url_for('passport_add', player_id=player['player_id']) }}">
+          <div class="grid">
+            <label><span>护照号 *</span><input name="passport_no" required /></label>
+            <label><span>有效期(建议 YYYY-MM-DD)</span><input name="valid_until" /></label>
+            <label>
+              <span>是否当前</span>
+              <select name="is_current">
+                <option value="1" selected>是</option>
+                <option value="0">否</option>
+              </select>
+            </label>
+          </div>
+          <div class="form__footer">
+            <button class="btn btn--primary" type="submit">添加</button>
+          </div>
+        </form>
+        <table class="table table--compact">
+          <thead><tr><th>ID</th><th>护照号</th><th>有效期</th><th>当前</th><th style="width:120px;">操作</th></tr></thead>
+          <tbody>
+            {% if passports|length == 0 %}
+              <tr><td class="muted" colspan="5">暂无</td></tr>
+            {% else %}
+              {% for p in passports %}
+                <tr>
+                  <td>{{ p["passport_id"] }}</td>
+                  <td class="mono">{{ p["passport_no"] }}</td>
+                  <td class="mono">{{ p["valid_until"] or "" }}</td>
+                  <td>{{ "是" if p["is_current"] == 1 else "否" }}</td>
+                  <td>
+                    <form method="post" action="{{ url_for('passport_delete', passport_id=p['passport_id']) }}">
+                      <input type="hidden" name="player_id" value="{{ player['player_id'] }}" />
+                      <button class="btn btn--small btn--danger" type="submit" onclick="return confirm('确认删除？');">删除</button>
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card__header">
+        <h2 class="h2">比赛日程</h2>
+      </div>
+      <div class="card__body">
+        <form class="form" method="post" action="{{ url_for('match_add', player_id=player['player_id']) }}">
+          <div class="grid">
+            <label><span>标题 *</span><input name="title" required /></label>
+            <label><span>开始时间</span><input name="start_time" placeholder="YYYY-MM-DD HH:MM" /></label>
+            <label><span>结束时间</span><input name="end_time" placeholder="YYYY-MM-DD HH:MM" /></label>
+            <label><span>地点</span><input name="location" /></label>
+            <label class="grid__full"><span>备注</span><input name="notes" /></label>
+          </div>
+          <div class="form__footer">
+            <button class="btn btn--primary" type="submit">添加</button>
+          </div>
+        </form>
+        <table class="table table--compact">
+          <thead><tr><th>ID</th><th>标题</th><th>开始</th><th>结束</th><th>地点</th><th style="width:120px;">操作</th></tr></thead>
+          <tbody>
+            {% if matches|length == 0 %}
+              <tr><td class="muted" colspan="6">暂无</td></tr>
+            {% else %}
+              {% for m in matches %}
+                <tr>
+                  <td>{{ m["match_id"] }}</td>
+                  <td>{{ m["title"] }}</td>
+                  <td class="mono">{{ m["start_time"] or "" }}</td>
+                  <td class="mono">{{ m["end_time"] or "" }}</td>
+                  <td>{{ m["location"] or "" }}</td>
+                  <td>
+                    <form method="post" action="{{ url_for('match_delete', match_id=m['match_id']) }}">
+                      <input type="hidden" name="player_id" value="{{ player['player_id'] }}" />
+                      <button class="btn btn--small btn--danger" type="submit" onclick="return confirm('确认删除？');">删除</button>
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+

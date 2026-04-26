@@ -1,0 +1,1897 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>体育IP衍生品共创平台</title>
+  <style>
+    :root {
+      --bg: #eefcf8;
+      --paper: #ffffff;
+      --ink: #06324d;
+      --muted: #5d7784;
+      --line: #cfe6e4;
+      --night: #06476a;
+      --green: #079b91;
+      --lime: #b9fff0;
+      --orange: #0db2a7;
+      --blue: #00658d;
+      --cyan: #18c9bd;
+      --shadow: 0 20px 50px rgba(6, 71, 106, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 18% 8%, rgba(24, 201, 189, 0.16), transparent 34%),
+        linear-gradient(180deg, #f3fffc, var(--bg));
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    .page {
+      width: min(1240px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 22px 0 42px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      padding: 12px 0 16px;
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(6, 71, 106, 0.08);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 58px;
+      height: 58px;
+      border-radius: 14px;
+      background: #e8fff9;
+      border: 1px solid rgba(7, 155, 145, 0.28);
+      box-shadow: 0 12px 26px rgba(6, 71, 106, 0.12);
+      flex: 0 0 auto;
+      overflow: hidden;
+    }
+
+    .brand-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 18px;
+      line-height: 1.1;
+      color: var(--ink);
+    }
+
+    .brand span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav button,
+    .chip {
+      border: 1px solid rgba(17, 24, 32, 0.1);
+      background: rgba(255, 255, 255, 0.78);
+      color: var(--ink);
+      border-radius: 999px;
+      min-height: 38px;
+      padding: 0 13px;
+      font-weight: 900;
+    }
+
+    .nav button.active,
+    .chip.active {
+      background: linear-gradient(135deg, var(--night), var(--green));
+      color: #fff;
+      border-color: var(--night);
+    }
+
+    .view {
+      display: none;
+      animation: fade 0.24s ease;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    @keyframes fade {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero {
+      min-height: calc(100vh - 92px);
+      display: grid;
+      grid-template-columns: minmax(0, 1.03fr) minmax(380px, 0.97fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .motion-banner {
+      height: clamp(250px, 36vw, 430px);
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 18px;
+      background: linear-gradient(135deg, var(--night), var(--green));
+      box-shadow: var(--shadow);
+    }
+
+    .banner-track {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      width: 400%;
+      animation: bannerMove 18s infinite ease-in-out;
+    }
+
+    .banner-slide {
+      width: 25%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .banner-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.08) contrast(1.08);
+      transform: scale(1.08);
+      animation: bannerZoom 6s infinite alternate ease-in-out;
+    }
+
+    .motion-banner::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.16) 62%, rgba(0, 0, 0, 0.35));
+      pointer-events: none;
+    }
+
+    .banner-copy {
+      position: absolute;
+      left: clamp(22px, 5vw, 54px);
+      bottom: clamp(22px, 5vw, 46px);
+      z-index: 1;
+      color: #fff;
+      max-width: 720px;
+    }
+
+    .banner-copy h1 {
+      margin-bottom: 10px;
+      font-size: clamp(38px, 6vw, 78px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .banner-copy p {
+      margin-bottom: 0;
+      max-width: 620px;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.7;
+    }
+
+    @keyframes bannerMove {
+      0%, 20% {
+        transform: translateX(0);
+      }
+      28%, 45% {
+        transform: translateX(-25%);
+      }
+      53%, 70% {
+        transform: translateX(-50%);
+      }
+      78%, 95% {
+        transform: translateX(-75%);
+      }
+      100% {
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes bannerZoom {
+      from {
+        transform: scale(1.04);
+      }
+      to {
+        transform: scale(1.14);
+      }
+    }
+
+    .hero-copy {
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      padding: clamp(24px, 5vw, 48px);
+      display: grid;
+      align-content: space-between;
+      gap: 28px;
+      min-height: 620px;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero-copy::after {
+      content: "";
+      display: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      color: var(--orange);
+      font-weight: 900;
+      margin-bottom: 14px;
+    }
+
+    .hero-copy h1 {
+      max-width: 720px;
+      margin-bottom: 16px;
+      font-size: clamp(38px, 5vw, 68px);
+      line-height: 1.05;
+      letter-spacing: 0;
+      position: relative;
+      z-index: 1;
+      word-break: keep-all;
+    }
+
+    .lead {
+      max-width: 700px;
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.75;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn {
+      border: 0;
+      min-height: 44px;
+      border-radius: 7px;
+      padding: 0 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 900;
+    }
+
+    .btn-primary {
+      background: var(--lime);
+      color: var(--night);
+    }
+
+    .btn-dark {
+      background: linear-gradient(135deg, var(--night), var(--green));
+      color: #fff;
+    }
+
+    .btn-light {
+      background: #fff;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid rgba(9, 9, 9, 0.2);
+    }
+
+    .hero-board {
+      display: grid;
+      gap: 14px;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(220, 227, 234, 0.96);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-pad {
+      padding: 18px;
+    }
+
+    .section {
+      margin-top: 18px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 18px;
+      margin-bottom: 14px;
+    }
+
+    .section-head h2,
+    .panel-title h2 {
+      margin-bottom: 5px;
+      font-size: 25px;
+    }
+
+    .muted {
+      color: var(--muted);
+      line-height: 1.58;
+      margin-bottom: 0;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: #fff;
+    }
+
+    .stat strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .visual-card {
+      min-height: 340px;
+      border-radius: 8px;
+      background: #111;
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      color: #fff;
+    }
+
+    .visual-card img {
+      width: 100%;
+      height: 100%;
+      min-height: 340px;
+      object-fit: cover;
+      filter: saturate(1.05) contrast(1.08);
+    }
+
+    .visual-card::after {
+      content: "IRONMAN CHINA CO-CREATION";
+      position: absolute;
+      left: 18px;
+      bottom: 16px;
+      color: #fff;
+      font-weight: 900;
+      letter-spacing: 0;
+      background: rgba(0, 0, 0, 0.58);
+      padding: 8px 10px;
+      border-radius: 6px;
+    }
+
+    .track-art {
+      width: min(320px, 72%);
+      aspect-ratio: 0.72;
+      border-radius: 28px 28px 14px 14px;
+      border: 0;
+      background:
+        linear-gradient(90deg, transparent 0 44%, rgba(255, 255, 255, 0.42) 44% 56%, transparent 56%),
+        linear-gradient(135deg, var(--night), var(--green));
+      position: relative;
+      transform: rotate(-4deg);
+      box-shadow: 0 30px 70px rgba(9, 9, 9, 0.22);
+    }
+
+    .track-art::before {
+      content: "";
+      position: absolute;
+      width: 44%;
+      height: 28%;
+      left: 28%;
+      top: -4%;
+      border-radius: 0 0 999px 999px;
+      background: #f2f4f7;
+    }
+
+    .track-art::after {
+      content: "SWIM\A RIDE\A RUN";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) rotate(4deg);
+      width: 190px;
+      text-align: center;
+      font-weight: 900;
+      line-height: 1.1;
+      white-space: pre;
+      color: var(--lime);
+      font-size: 42px;
+    }
+
+    .home-cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .home-card,
+    .ip-card,
+    .work-card,
+    .brief-card,
+    .rank-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .home-card {
+      padding: 16px;
+      min-height: 154px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .home-card b {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--night), var(--green));
+      color: var(--lime);
+    }
+
+    .home-card h3 {
+      margin-bottom: 0;
+      font-size: 18px;
+    }
+
+    .home-card p {
+      color: var(--muted);
+      margin-bottom: 0;
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .page-title {
+      min-height: 220px;
+      padding: clamp(24px, 4vw, 38px);
+      border-radius: 8px;
+      background:
+        linear-gradient(115deg, var(--night), var(--green));
+      color: #fff;
+      display: grid;
+      align-content: end;
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-title::after {
+      content: "";
+      position: absolute;
+      right: 28px;
+      top: 24px;
+      width: 190px;
+      height: 190px;
+      border: 24px solid rgba(215, 255, 69, 0.2);
+      border-radius: 50%;
+    }
+
+    .page-title h1 {
+      margin-bottom: 10px;
+      font-size: clamp(34px, 5vw, 62px);
+      line-height: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .page-title p {
+      max-width: 760px;
+      margin-bottom: 0;
+      color: rgba(255, 255, 255, 0.75);
+      line-height: 1.7;
+      position: relative;
+      z-index: 1;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .brief-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .brief-card {
+      padding: 16px;
+    }
+
+    .brief-card h3 {
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .brief-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+      line-height: 1.58;
+    }
+
+    .campaign-banner {
+      min-height: 330px;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 18px;
+      background: linear-gradient(135deg, var(--night), var(--green));
+      box-shadow: var(--shadow);
+    }
+
+    .campaign-banner img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.08) contrast(1.08);
+    }
+
+    .campaign-banner::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0.2) 64%, rgba(0, 0, 0, 0.42)),
+        linear-gradient(0deg, rgba(0, 0, 0, 0.34), transparent 52%);
+    }
+
+    .campaign-copy {
+      position: absolute;
+      left: clamp(22px, 4vw, 44px);
+      bottom: clamp(22px, 4vw, 38px);
+      z-index: 1;
+      max-width: 720px;
+      color: #fff;
+    }
+
+    .campaign-copy h2 {
+      margin-bottom: 10px;
+      font-size: clamp(32px, 5vw, 60px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .campaign-copy p {
+      max-width: 620px;
+      margin-bottom: 14px;
+      color: rgba(255, 255, 255, 0.78);
+      line-height: 1.65;
+    }
+
+    .banner-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .banner-meta span {
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .publish-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(340px, 0.9fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field label {
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      color: var(--ink);
+      padding: 11px 12px;
+      outline: none;
+      font: inherit;
+    }
+
+    .field textarea {
+      min-height: 96px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--night);
+      box-shadow: 0 0 0 4px rgba(9, 9, 9, 0.08);
+    }
+
+    .check-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .check-pill {
+      min-height: 96px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(180deg, #fff, #fafafa);
+      color: #344054;
+      font-size: 13px;
+      font-weight: 800;
+      position: relative;
+      overflow: hidden;
+      transition: border 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+    }
+
+    .check-pill input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      accent-color: var(--night);
+    }
+
+    .check-pill:has(input:checked) {
+      border-color: var(--night);
+      box-shadow: 0 0 0 3px rgba(9, 9, 9, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .check-pill:has(input:checked)::after {
+      content: "已选";
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      border-radius: 999px;
+      padding: 4px 8px;
+      background: var(--lime);
+      color: var(--night);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .choice-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      background: linear-gradient(135deg, var(--night), var(--green));
+      color: var(--lime);
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .choice-copy {
+      display: grid;
+      gap: 4px;
+      padding-right: 42px;
+    }
+
+    .choice-copy strong {
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    .choice-copy span {
+      color: var(--muted);
+      font-weight: 500;
+      line-height: 1.42;
+    }
+
+    .upload-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .upload-card {
+      border: 1px dashed #b8c2cc;
+      border-radius: 8px;
+      padding: 14px;
+      background: #fff;
+      display: grid;
+      gap: 8px;
+    }
+
+    .upload-card strong {
+      display: block;
+      font-size: 15px;
+    }
+
+    .upload-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .upload-card input {
+      width: 100%;
+      font-size: 13px;
+    }
+
+    .file-name {
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 900;
+      min-height: 16px;
+    }
+
+    .visual-standards {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .standard-card {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .standard-card strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .standard-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .swatch-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .swatch {
+      width: 56px;
+      height: 34px;
+      border-radius: 7px;
+      border: 1px solid var(--line);
+    }
+
+    .trend-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .trend-row {
+      display: grid;
+      grid-template-columns: 140px 1fr 40px;
+      gap: 10px;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .bar {
+      height: 10px;
+      border-radius: 999px;
+      background: #edf1f5;
+      overflow: hidden;
+    }
+
+    .bar span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--green), var(--lime));
+    }
+
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .work-card {
+      overflow: hidden;
+    }
+
+    .mockup {
+      height: 158px;
+      display: grid;
+      place-items: center;
+      background: #111;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mockup::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.58));
+      z-index: 1;
+    }
+
+    .mockup img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.05) contrast(1.06);
+    }
+
+    .mockup span {
+      position: relative;
+      z-index: 2;
+      min-width: 100px;
+      min-height: 82px;
+      border-radius: 8px;
+      padding: 12px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      background: var(--lime);
+      color: var(--night);
+      font-weight: 900;
+      line-height: 1.15;
+    }
+
+    .work-body {
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .work-body h3 {
+      margin-bottom: 0;
+      font-size: 18px;
+    }
+
+    .work-body p {
+      margin-bottom: 0;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .vote-line {
+      display: grid;
+      grid-template-columns: 88px 1fr 36px;
+      gap: 8px;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .rank {
+      display: grid;
+      gap: 10px;
+    }
+
+    .draft-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .draft-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 210px 1fr;
+      min-height: 210px;
+    }
+
+    .draft-card .mockup {
+      height: 100%;
+      min-height: 210px;
+    }
+
+    .draft-body {
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .draft-body h3 {
+      margin-bottom: 0;
+      font-size: 18px;
+    }
+
+    .draft-body p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .draft-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .draft-score {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-top: 8px;
+      border-top: 1px solid var(--line);
+      font-weight: 900;
+    }
+
+    .rank-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 13px;
+    }
+
+    .rank-no {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--night), var(--green));
+      color: var(--lime);
+      font-weight: 900;
+    }
+
+    .rank-item strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .rank-item span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .score {
+      font-weight: 900;
+      color: var(--green);
+    }
+
+    .ip-toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .ip-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .ip-card {
+      min-height: 218px;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: 84px 1fr;
+    }
+
+    .ip-top {
+      display: grid;
+      align-content: center;
+      padding: 14px;
+      background: var(--night);
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ip-top::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.72));
+      z-index: 1;
+    }
+
+    .ip-top img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.04) contrast(1.08);
+    }
+
+    .ip-top b {
+      position: relative;
+      z-index: 2;
+      font-size: 24px;
+      line-height: 1.05;
+    }
+
+    .ip-body {
+      padding: 14px;
+    }
+
+    .ip-body h3 {
+      margin-bottom: 8px;
+      font-size: 17px;
+    }
+
+    .ip-body p {
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.48;
+    }
+
+    .tag-row {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      border-radius: 999px;
+      padding: 6px 9px;
+      background: #edf1f5;
+      color: #344054;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .consumer-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .vote-card {
+      display: grid;
+      grid-template-columns: 190px 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      margin-bottom: 10px;
+    }
+
+    .vote-art {
+      height: 118px;
+      border-radius: 8px;
+      background: #111;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 900;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vote-art img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.05) contrast(1.06);
+    }
+
+    .vote-art span {
+      position: relative;
+      z-index: 1;
+      background: rgba(0, 0, 0, 0.58);
+      padding: 8px 10px;
+      border-radius: 6px;
+    }
+
+    .vote-card h3 {
+      margin-bottom: 8px;
+      font-size: 19px;
+    }
+
+    .vote-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .side-panel {
+      padding: 16px;
+      position: sticky;
+      top: 92px;
+    }
+
+    .side-panel h3 {
+      margin-bottom: 10px;
+    }
+
+    .side-panel p {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%) translateY(14px);
+      opacity: 0;
+      pointer-events: none;
+      background: var(--night);
+      color: #fff;
+      padding: 11px 14px;
+      border-radius: 7px;
+      box-shadow: var(--shadow);
+      transition: 0.18s ease;
+      z-index: 30;
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 1080px) {
+      .hero,
+      .two-col,
+      .publish-layout,
+      .consumer-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .ip-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .side-panel {
+        position: static;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        width: min(100% - 20px, 1240px);
+        padding-top: 10px;
+      }
+
+      .topbar,
+      .section-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .hero-copy {
+        min-height: 520px;
+      }
+
+      .hero-copy h1,
+      .page-title h1 {
+        font-size: 38px;
+      }
+
+      .stat-grid,
+      .home-cards,
+      .form-grid,
+      .check-grid,
+      .work-grid,
+      .draft-grid,
+      .ip-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .draft-card {
+        grid-template-columns: 1fr;
+      }
+
+      .vote-card {
+        grid-template-columns: 1fr;
+      }
+
+      .trend-row {
+        grid-template-columns: 108px 1fr 34px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">
+          <img src="assets/brand-logo.png" alt="体育IP衍生品共创平台头像">
+        </div>
+        <div>
+          <strong>体育IP衍生品共创平台</strong>
+          <span>TAKE LOVE TO LIFE</span>
+        </div>
+      </div>
+      <nav class="nav" aria-label="页面导航">
+        <button class="active" type="button" data-view-target="home">首页</button>
+        <button type="button" data-view-target="brand">IP主页面</button>
+        <button type="button" data-view-target="consumer">共创者页面</button>
+        <button type="button" data-section-target="home-ip-showcase">IP 展示</button>
+      </nav>
+    </header>
+
+    <section class="view active" id="home">
+      <section class="motion-banner" aria-label="运动共创动态横幅">
+        <div class="banner-track">
+          <div class="banner-slide">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/1/16/Tri_swim_bike_run.jpg" alt="铁人三项运动员比赛照片">
+          </div>
+          <div class="banner-slide">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/f/ff/Army_vs_Navy_Basketball_game%2C_2004.jpg" alt="篮球比赛现场照片">
+          </div>
+          <div class="banner-slide">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/1/10/Football_stadiums_crowds_fields_scoreboards_chargers.jpg" alt="体育场观众和比赛现场照片">
+          </div>
+          <div class="banner-slide">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/1/16/Tri_swim_bike_run.jpg" alt="铁人三项游泳骑行跑步照片">
+          </div>
+        </div>
+        <div class="banner-copy">
+          <h1>体育IP衍生品共创平台</h1>
+          <p>TAKE LOVE TO LIFE，让体育热爱从赛场延伸到生活里的每一件衍生品。</p>
+        </div>
+      </section>
+
+      <div class="hero">
+        <section class="hero-copy">
+          <div>
+            <div class="eyebrow">SPORTS IP CO-CREATION</div>
+            <h1>让体育热爱<br>进入生活<br>共同创造</h1>
+            <p class="lead">一个面向体育 IP主的衍生品共创平台：IP主发布征集，共创者提交创意并参与投票，最终筛选出更适合打样制作、也更符合品牌表达的设计稿。</p>
+          </div>
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="button" data-go="brand">进入IP主页面</button>
+            <button class="btn btn-outline" type="button" data-go="consumer">查看共创者页面</button>
+          </div>
+        </section>
+
+        <aside class="hero-board">
+          <div class="panel visual-card">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/1/16/Tri_swim_bike_run.jpg" alt="铁人三项赛事真实照片">
+          </div>
+          <div class="panel panel-pad">
+            <div class="stat-grid">
+              <div class="stat">
+                <strong>3</strong>
+                <span>购买意愿、精神表达、社交传播三项投票标准</span>
+              </div>
+              <div class="stat">
+                <strong>4</strong>
+                <span>职业球队、赛事、运动项目、运动员个人四类 IP</span>
+              </div>
+              <div class="stat">
+                <strong>1</strong>
+                <span>主案例：铁人中国赛事 IP 共创征集</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <section class="panel panel-pad section">
+        <div class="section-head">
+          <div>
+            <h2>平台分为两个核心页面</h2>
+            <p class="muted">IP主和共创者不混在同一个界面里，各自看到自己最需要的信息。</p>
+          </div>
+        </div>
+        <div class="home-cards">
+          <article class="home-card">
+            <b>01</b>
+            <h3>IP主页面</h3>
+            <p>查看趋势、发布征集主题、管理投稿、筛选入围打样设计稿。</p>
+            <button class="btn btn-light" type="button" data-go="brand">进入IP主页面</button>
+          </article>
+          <article class="home-card">
+            <b>02</b>
+            <h3>共创者页面</h3>
+            <p>浏览官方征集作品，用简单投票表达“我想买”和“我愿意分享”。</p>
+            <button class="btn btn-light" type="button" data-go="consumer">进入共创者页面</button>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel panel-pad section" id="home-ip-showcase">
+        <div class="section-head">
+          <div>
+            <h2>常见真实体育IP展示</h2>
+            <p class="muted">这里用真实常见体育IP名称做类型展示。页面不使用官方 logo，重点呈现哪些 IP 适合发起衍生品共创。</p>
+          </div>
+        </div>
+        <div class="ip-toolbar">
+          <button class="chip active" type="button" data-ip-type="all">全部</button>
+          <button class="chip" type="button" data-ip-type="league">联盟 / 联赛</button>
+          <button class="chip" type="button" data-ip-type="event">赛事</button>
+          <button class="chip" type="button" data-ip-type="team">球队 / 俱乐部</button>
+          <button class="chip" type="button" data-ip-type="athlete">运动员</button>
+        </div>
+        <div class="ip-grid" id="ipGrid"></div>
+      </section>
+    </section>
+
+    <section class="view" id="brand">
+      <div class="page-title">
+        <h1>IP主工作台</h1>
+        <p>从消费趋势出发，为铁人中国赛事 IP 发布“铁人精神潮流文创”征集，并筛选出更适合继续打样制作的设计稿。</p>
+      </div>
+
+      <section class="campaign-banner" aria-label="征集主题 banner 展示">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/1/16/Tri_swim_bike_run.jpg" alt="铁人中国征集 banner 真实赛事图">
+        <div class="campaign-copy">
+          <h2>冲过终点之后</h2>
+          <p>铁人中国潮流文创共创计划，面向共创者征集能代表坚持、自律、突破和完成感的可打样作品。</p>
+          <div class="banner-meta">
+            <span>官方征集</span>
+            <span>铁人精神</span>
+            <span>口号 T 恤 / 配饰 / 收藏卡</span>
+            <span>共创者投票筛选</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel panel-pad section">
+        <div class="panel-title">
+          <h2>趋势洞察</h2>
+          <p class="muted">示例数据用于表达平台价值，不代表真实销售数据。</p>
+        </div>
+        <div class="trend-list">
+          <div class="trend-row"><span>口号 T 恤</span><div class="bar"><span style="width:88%"></span></div><span>88</span></div>
+          <div class="trend-row"><span>运动配饰</span><div class="bar"><span style="width:83%"></span></div><span>83</span></div>
+          <div class="trend-row"><span>收藏卡</span><div class="bar"><span style="width:78%"></span></div><span>78</span></div>
+          <div class="trend-row"><span>城市贴纸</span><div class="bar"><span style="width:72%"></span></div><span>72</span></div>
+        </div>
+      </section>
+
+      <section class="panel panel-pad section">
+        <div class="section-head">
+          <div>
+            <h2>发布征集</h2>
+            <p class="muted">IP主可在这里补齐征集主题、投稿规则、可使用视觉资产和官方审核标准。</p>
+          </div>
+          <button class="btn btn-dark" type="button" id="publishBtn">模拟发布征集</button>
+        </div>
+
+        <div class="publish-layout">
+          <div>
+            <div class="form-grid">
+              <div class="field">
+                <label for="campaignName">征集名称</label>
+                <input id="campaignName" value="铁人中国 · 冲过终点之后">
+              </div>
+              <div class="field">
+                <label for="ipOwner">IP主 / IP 所属</label>
+                <input id="ipOwner" value="铁人中国赛事 IP">
+              </div>
+              <div class="field">
+                <label for="ipType">IP 类型</label>
+                <select id="ipType">
+                  <option>赛事 IP</option>
+                  <option>职业球队 IP</option>
+                  <option>运动项目 IP</option>
+                  <option>运动员个人 IP</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="deadline">投稿截止时间</label>
+                <input id="deadline" type="date" value="2026-06-30">
+              </div>
+              <div class="field full">
+                <label for="campaignBrief">征集一句话说明</label>
+                <input id="campaignBrief" value="把铁人精神变成年轻人愿意穿、用、收藏和分享的文创产品。">
+              </div>
+              <div class="field full">
+                <label>开放投稿品类</label>
+                <div class="check-grid">
+                  <label class="check-pill">
+                    <input type="checkbox" checked>
+                    <span class="choice-icon">衣</span>
+                    <span class="choice-copy"><strong>口号 T 恤 / 训练服</strong><span>适合赛事现场、训练日和日常穿搭。</span></span>
+                  </label>
+                  <label class="check-pill">
+                    <input type="checkbox" checked>
+                    <span class="choice-icon">配</span>
+                    <span class="choice-copy"><strong>能量手环 / 运动配饰</strong><span>适合低门槛购买、随身佩戴和社交传播。</span></span>
+                  </label>
+                  <label class="check-pill">
+                    <input type="checkbox" checked>
+                    <span class="choice-icon">卡</span>
+                    <span class="choice-copy"><strong>完赛收藏卡 / 纪念章</strong><span>适合完赛纪念、编号收藏和限定发行。</span></span>
+                  </label>
+                  <label class="check-pill">
+                    <input type="checkbox" checked>
+                    <span class="choice-icon">城</span>
+                    <span class="choice-copy"><strong>城市限定水壶 / 贴纸</strong><span>适合城市赛道、地标联名和文旅延展。</span></span>
+                  </label>
+                </div>
+              </div>
+              <div class="field full">
+                <label>共创者投票维度</label>
+                <div class="check-grid">
+                  <label class="check-pill">
+                    <input type="checkbox" checked>
+                    <span class="choice-icon">买</span>
+                    <span class="choice-copy"><strong>我愿意购买</strong><span>判断真实消费潜力和价格接受度。</span></span>
+                  </label>
+                  <label class="check-pill">
+                    <input type="checkbox" checked>
+                    <span class="choice-icon">魂</span>
+                    <span class="choice-copy"><strong>最能代表铁人精神</strong><span>判断是否表达坚持、自律、突破和完成感。</span></span>
+                  </label>
+                  <label class="check-pill">
+                    <input type="checkbox" checked>
+                    <span class="choice-icon">传</span>
+                    <span class="choice-copy"><strong>最适合社交传播</strong><span>判断打卡、分享和话题扩散能力。</span></span>
+                  </label>
+                  <label class="check-pill">
+                    <input type="checkbox">
+                    <span class="choice-icon">样</span>
+                    <span class="choice-copy"><strong>最适合快速打样</strong><span>辅助 IP主判断供应链落地优先级。</span></span>
+                  </label>
+                </div>
+              </div>
+              <div class="field full">
+                <label for="submissionRules">投稿要求</label>
+                <textarea id="submissionRules">作品需说明产品形态、使用场景、核心视觉元素和可打样建议；需体现游泳、骑行、跑步或终点冲线元素，避免使用未经授权的第三方标识。</textarea>
+              </div>
+              <div class="field full">
+                <label for="rewardInfo">入围权益 / 后续合作说明</label>
+                <textarea id="rewardInfo">入围作品将进入 IP主打样评估；优秀作品可获得官方共创署名、样品制作机会和后续授权合作洽谈机会。</textarea>
+              </div>
+            </div>
+          </div>
+
+          <aside>
+            <div class="brief-card">
+              <h3>上传文档与官方视觉元素</h3>
+              <p>这里用于放置共创者投稿前必须查看的资料。当前为本地演示选择文件，不会真实上传。</p>
+            </div>
+            <div class="upload-grid" style="margin-top:12px">
+              <label class="upload-card">
+                <strong>征集说明文档</strong>
+                <p>建议上传 PDF / Word，包含背景、目标人群、品类范围和评审规则。</p>
+                <input type="file" data-file-input accept=".pdf,.doc,.docx,.ppt,.pptx">
+                <span class="file-name">未选择文件</span>
+              </label>
+              <label class="upload-card">
+                <strong>官方标准视觉元素</strong>
+                <p>建议上传 logo、标准色、字体、赛事主视觉、口号、禁止使用说明。</p>
+                <input type="file" data-file-input accept=".zip,.pdf,.png,.jpg,.jpeg,.svg" multiple>
+                <span class="file-name">未选择文件</span>
+              </label>
+              <label class="upload-card">
+                <strong>赛事图片 / 授权素材包</strong>
+                <p>提供共创者可合法使用的赛事照片、运动员图片、城市地标素材。</p>
+                <input type="file" data-file-input accept=".zip,.png,.jpg,.jpeg" multiple>
+                <span class="file-name">未选择文件</span>
+              </label>
+            </div>
+
+            <div class="visual-standards">
+              <div class="standard-card">
+                <strong>官方标准色</strong>
+                <div class="swatch-row">
+                  <span class="swatch" style="background:#06476a"></span>
+                  <span class="swatch" style="background:#079b91"></span>
+                  <span class="swatch" style="background:#18c9bd"></span>
+                  <span class="swatch" style="background:#b9fff0"></span>
+                </div>
+              </div>
+              <div class="standard-card">
+                <strong>视觉使用提醒</strong>
+                <p>作品可使用官方提供素材；不得变形官方标识，不得混用其他赛事或品牌 logo，不得弱化铁人中国赛事识别。</p>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="panel panel-pad section">
+        <div class="section-head">
+          <div>
+            <h2>生成前三名打样设计稿</h2>
+            <p class="muted">根据共创者反馈生成衣服、配饰、收藏卡三类设计图，方便 IP主判断下一步打样重点。</p>
+          </div>
+          <button class="btn btn-light" type="button" id="brandVoteBtn">生成设计稿</button>
+        </div>
+        <div class="rank" id="rankList"></div>
+      </section>
+    </section>
+
+    <section class="view" id="consumer">
+      <div class="page-title">
+        <h1>共创者广场</h1>
+        <p>共创者看到的是作品和投票，而不是复杂的IP主数据。平台用参与感把体育IP和粉丝情感连接起来。</p>
+      </div>
+
+      <div class="consumer-layout">
+        <section class="panel panel-pad">
+          <div class="section-head">
+            <div>
+              <h2>铁人中国官方征集作品</h2>
+              <p class="muted">点击投票，模拟共创者参与作品选择。</p>
+            </div>
+          </div>
+          <div id="consumerWorks"></div>
+        </section>
+
+        <aside class="panel side-panel">
+          <h3>你的投票会影响什么？</h3>
+          <p>IP主会看到哪些作品更值得继续打样：共创者想不想买、能不能代表铁人精神、适不适合在社交平台传播。</p>
+          <button class="btn btn-dark" type="button" data-go="brand">查看IP主如何使用结果</button>
+        </aside>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="toast" id="toast">已更新</div>
+
+  <script>
+    const imageSet = {
+      triathlon: "https://upload.wikimedia.org/wikipedia/commons/1/16/Tri_swim_bike_run.jpg",
+      basketball: "https://upload.wikimedia.org/wikipedia/commons/f/ff/Army_vs_Navy_Basketball_game%2C_2004.jpg",
+      stadium: "https://upload.wikimedia.org/wikipedia/commons/1/10/Football_stadiums_crowds_fields_scoreboards_chargers.jpg"
+    };
+
+    const works = [
+      {
+        title: "铁人中国冲线训练服",
+        type: "衣服",
+        desc: "大模型生成的铁人中国训练服设计图，用三项运动轨迹和终点冲线元素强化赛事精神。",
+        image: "assets/ti-china-shirt.png",
+        draft: "以黑色速干 T 恤为底，胸前使用三段赛道线和终点拱门，加入铁人中国与 SWIM RIDE RUN 字样。",
+        sample: "建议先打样基础款与反光印花款，适合赛事现场售卖和训练日穿着。",
+        buy: 92,
+        spirit: 94,
+        social: 89
+      },
+      {
+        title: "三项能量配饰套组",
+        type: "配饰",
+        desc: "大模型生成的配饰套组设计图，包含手环、挂饰和贴纸，适合共创者低门槛参与。",
+        image: "assets/ti-china-accessories.png",
+        draft: "用蓝、荧光黄、橙红三色对应游骑跑，结合手环、奖牌挂饰和水壶贴纸形成套组。",
+        sample: "建议做硅胶手环、拉链挂饰和防水贴纸三个小件，适合赛事包与完赛礼。",
+        buy: 87,
+        spirit: 84,
+        social: 91
+      },
+      {
+        title: "铁人时刻收藏卡",
+        type: "收藏卡",
+        desc: "大模型生成的收藏卡设计图，用游泳、骑行、跑步三个阶段组织系列化收藏。",
+        image: "assets/ti-china-cards.png",
+        draft: "一套 6 张卡，按赛前、入水、骑行、跑步、冲线、完赛拥抱组织叙事。",
+        sample: "建议加入编号、完赛城市和隐藏款设计，适合做赛事限定收藏。",
+        buy: 84,
+        spirit: 90,
+        social: 86
+      }
+    ];
+
+    const ips = [
+      { name: "NBA", category: "league", label: "联盟", image: imageSet.basketball, fit: "适合球队联名、球星文化、城市球迷身份类文创。", tags: ["篮球", "全球粉丝", "潮流"] },
+      { name: "CBA 联赛", category: "league", label: "联赛", image: imageSet.basketball, fit: "适合本土城市俱乐部、主场文化和球迷应援周边。", tags: ["篮球", "中国", "主场"] },
+      { name: "英超 Premier League", category: "league", label: "联赛", image: imageSet.stadium, fit: "适合俱乐部文化、比赛日装备、城市旅游纪念。", tags: ["足球", "俱乐部", "比赛日"] },
+      { name: "中超联赛", category: "league", label: "联赛", image: imageSet.stadium, fit: "适合城市足球、球迷围巾、徽章和主场故事。", tags: ["足球", "城市", "球迷"] },
+      { name: "奥林匹克运动会", category: "event", label: "赛事", image: imageSet.stadium, fit: "适合运动精神、国家记忆、纪念章和收藏类产品。", tags: ["综合赛事", "精神", "纪念"] },
+      { name: "FIFA 世界杯", category: "event", label: "赛事", image: imageSet.stadium, fit: "适合国家队情绪、观赛派对、球迷收藏和城市活动。", tags: ["足球", "全球", "观赛"] },
+      { name: "IRONMAN 铁人三项", category: "event", label: "赛事", image: imageSet.triathlon, fit: "适合完赛荣誉、训练生活方式和挑战精神表达。", tags: ["铁三", "完赛", "挑战"] },
+      { name: "环法自行车赛", category: "event", label: "赛事", image: imageSet.triathlon, fit: "适合骑行路线、黄色领骑衫文化和户外装备周边。", tags: ["骑行", "路线", "户外"] },
+      { name: "洛杉矶湖人", category: "team", label: "球队", image: imageSet.basketball, fit: "适合经典队史、球迷身份、主场配色和收藏产品。", tags: ["篮球", "球队", "收藏"] },
+      { name: "皇家马德里", category: "team", label: "俱乐部", image: imageSet.stadium, fit: "适合冠军记忆、城市文化和高识别度球迷文创。", tags: ["足球", "冠军", "城市"] },
+      { name: "北京国安", category: "team", label: "俱乐部", image: imageSet.stadium, fit: "适合城市归属、主场看台文化和球迷生活方式。", tags: ["足球", "北京", "主场"] },
+      { name: "上海海港", category: "team", label: "俱乐部", image: imageSet.stadium, fit: "适合城市港口气质、冠军纪念和球迷应援产品。", tags: ["足球", "上海", "应援"] },
+      { name: "梅西 Lionel Messi", category: "athlete", label: "运动员", image: imageSet.stadium, fit: "适合经典动作、成长故事、签名收藏和粉丝纪念。", tags: ["足球", "个人", "收藏"] },
+      { name: "C罗 Cristiano Ronaldo", category: "athlete", label: "运动员", image: imageSet.stadium, fit: "适合自律精神、训练口号和粉丝潮流周边。", tags: ["足球", "自律", "粉丝"] },
+      { name: "谷爱凌", category: "athlete", label: "运动员", image: imageSet.triathlon, fit: "适合冰雪运动、年轻生活方式和女性运动力量表达。", tags: ["冰雪", "年轻", "生活方式"] },
+      { name: "苏炳添", category: "athlete", label: "运动员", image: imageSet.triathlon, fit: "适合速度精神、中国田径记忆和突破主题文创。", tags: ["田径", "速度", "突破"] }
+    ];
+
+    const toast = document.querySelector("#toast");
+    const rankList = document.querySelector("#rankList");
+    const consumerWorks = document.querySelector("#consumerWorks");
+    const ipGrid = document.querySelector("#ipGrid");
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => toast.classList.remove("show"), 1500);
+    }
+
+    function switchView(id) {
+      document.querySelectorAll(".view").forEach((view) => view.classList.toggle("active", view.id === id));
+      document.querySelectorAll("[data-view-target]").forEach((button) => button.classList.toggle("active", button.dataset.viewTarget === id));
+      document.querySelectorAll("[data-section-target]").forEach((button) => button.classList.remove("active"));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function scrollHomeSection(sectionId, activeButton) {
+      document.querySelectorAll(".view").forEach((view) => view.classList.toggle("active", view.id === "home"));
+      document.querySelectorAll(".nav button").forEach((button) => button.classList.remove("active"));
+      activeButton.classList.add("active");
+      requestAnimationFrame(() => {
+        document.querySelector(`#${sectionId}`).scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+
+    function score(work) {
+      return Math.round(work.buy * 0.38 + work.spirit * 0.34 + work.social * 0.28);
+    }
+
+    function voteLine(label, value) {
+      return `
+        <div class="vote-line">
+          <b>${label}</b>
+          <div class="bar"><span style="width:${value}%"></span></div>
+          <b>${value}</b>
+        </div>
+      `;
+    }
+
+    function renderRank() {
+      const sorted = [...works].sort((a, b) => score(b) - score(a)).slice(0, 3);
+      rankList.innerHTML = `
+        <div class="draft-grid">
+          ${sorted.map((work, index) => `
+            <article class="draft-card">
+              <div class="mockup">
+                <img src="${work.image}" alt="${work.title}生成设计稿参考图">
+                <span>打样 ${String(index + 1).padStart(2, "0")}<br>${work.type}</span>
+              </div>
+              <div class="draft-body">
+                <div>
+                  <h3>${work.title}</h3>
+                  <p>${work.desc}</p>
+                </div>
+                <div class="draft-meta">
+                  <span class="tag">愿意购买 ${work.buy}</span>
+                  <span class="tag">铁人精神 ${work.spirit}</span>
+                  <span class="tag">社交传播 ${work.social}</span>
+                </div>
+                <p><strong>生成设计稿：</strong>${work.draft}</p>
+                <p><strong>打样建议：</strong>${work.sample}</p>
+                <div class="draft-score">
+                  <span>综合打样指数</span>
+                  <span class="score">${score(work)}</span>
+                </div>
+              </div>
+            </article>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function renderConsumerWorks() {
+      consumerWorks.innerHTML = works.map((work, index) => `
+        <article class="vote-card">
+          <div class="vote-art">
+            <img src="${work.image}" alt="${work.title}相关真实运动图片">
+            <span>${work.type}</span>
+          </div>
+          <div>
+            <h3>${work.title}</h3>
+            <p>${work.desc}</p>
+            <div class="tag-row" style="margin-top:10px">
+              <span class="tag">想买 ${work.buy}</span>
+              <span class="tag">精神 ${work.spirit}</span>
+              <span class="tag">传播 ${work.social}</span>
+            </div>
+          </div>
+          <button class="btn btn-dark" type="button" data-vote="${index}">投票</button>
+        </article>
+      `).join("");
+    }
+
+    function renderIpGrid(type = "all") {
+      const list = type === "all" ? ips : ips.filter((item) => item.category === type);
+      ipGrid.innerHTML = list.map((item) => `
+        <article class="ip-card">
+          <div class="ip-top">
+            <img src="${item.image}" alt="${item.name}相关真实运动图片">
+            <b>${item.name}</b>
+          </div>
+          <div class="ip-body">
+            <h3>${item.label} IP</h3>
+            <p>${item.fit}</p>
+            <div class="tag-row">
+              ${item.tags.map((tag) => `<span class="tag">${tag}</span>`).join("")}
+            </div>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function simulateVotes(message) {
+      works.forEach((work) => {
+        work.buy = Math.min(96, work.buy + Math.floor(Math.random() * 5));
+        work.spirit = Math.min(96, work.spirit + Math.floor(Math.random() * 5));
+        work.social = Math.min(96, work.social + Math.floor(Math.random() * 5));
+      });
+      renderRank();
+      renderConsumerWorks();
+      showToast(message);
+    }
+
+    document.querySelectorAll("[data-view-target]").forEach((button) => {
+      button.addEventListener("click", () => switchView(button.dataset.viewTarget));
+    });
+
+    document.querySelectorAll("[data-section-target]").forEach((button) => {
+      button.addEventListener("click", () => scrollHomeSection(button.dataset.sectionTarget, button));
+    });
+
+    document.querySelectorAll("[data-go]").forEach((button) => {
+      button.addEventListener("click", () => switchView(button.dataset.go));
+    });
+
+    document.querySelector("#publishBtn").addEventListener("click", () => {
+      showToast("IP主征集主题已发布");
+    });
+
+    document.querySelector("#brandVoteBtn").addEventListener("click", () => {
+      simulateVotes("已生成最新打样设计稿");
+    });
+
+    document.querySelectorAll("[data-file-input]").forEach((input) => {
+      input.addEventListener("change", () => {
+        const names = [...input.files].map((file) => file.name);
+        const label = input.closest(".upload-card").querySelector(".file-name");
+        label.textContent = names.length ? names.join("、") : "未选择文件";
+        if (names.length) showToast("资料已添加到发布信息");
+      });
+    });
+
+    consumerWorks.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-vote]");
+      if (!button) return;
+      const work = works[Number(button.dataset.vote)];
+      work.buy = Math.min(96, work.buy + 3);
+      work.social = Math.min(96, work.social + 2);
+      renderRank();
+      renderConsumerWorks();
+      showToast("已收到你的共创投票");
+    });
+
+    document.querySelectorAll("[data-ip-type]").forEach((button) => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll("[data-ip-type]").forEach((item) => item.classList.remove("active"));
+        button.classList.add("active");
+        renderIpGrid(button.dataset.ipType);
+      });
+    });
+
+    renderRank();
+    renderConsumerWorks();
+    renderIpGrid();
+  </script>
+</body>
+</html>

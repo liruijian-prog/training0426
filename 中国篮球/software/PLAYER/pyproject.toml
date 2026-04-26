@@ -1,0 +1,10 @@
+[project]
+name = "player-info-manager"
+version = "0.1.0"
+requires-python = ">=3.11"
+description = "Desktop player information manager - database layer"
+readme = "README.md"
+
+[tool.ruff]
+line-length = 100
+

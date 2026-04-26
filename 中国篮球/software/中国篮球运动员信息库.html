@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>中国篮球运动员信息库</title>
+  <style>
+    /* =========================
+      1) Design Tokens / CSS Variables
+    ========================== */
+    :root{
+      --primary:#0A1F44;     /* 深蓝主色 */
+      --accent:#C41E3A;      /* 中国红点缀（关键操作） */
+      --bg:#F5F7FA;          /* 浅灰背景 */
+      --panel:#FFFFFF;       /* 卡片/面板白 */
+      --text:#0B1220;
+      --muted:#5C6B85;
+      --border:rgba(10,31,68,0.10);
+
+      --radius:12px;
+      --radius-sm:8px;
+      --shadow:0 2px 12px rgba(0,0,0,0.04);
+      --shadow-hover:0 10px 24px rgba(0,0,0,0.08);
+
+      --pad:24px;            /* 区块内边距 >= 24px */
+      --gap:16px;
+      --gap-lg:20px;
+
+      --h:44px;              /* 输入框高度 */
+      --trans:0.2s;
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "PingFang SC","Hiragino Sans GB","Microsoft YaHei", sans-serif;
+    }
+
+    /* =========================
+      2) Base
+    ========================== */
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background:var(--bg);
+      line-height:1.65; /* 1.6+ */
+    }
+    a{ color:inherit; text-decoration:none; }
+    button, input{ font:inherit; }
+    .mono{ font-family:var(--mono); }
+    .muted{ color:var(--muted); }
+    .container{
+      max-width:1200px;
+      margin:0 auto;
+      padding:28px 18px 40px;
+    }
+
+    /* =========================
+      3) Layout Shell
+    ========================== */
+    .page{
+      border-radius:var(--radius);
+      background:transparent;
+      display:flex;
+      flex-direction:column;
+      gap:var(--gap-lg);
+    }
+
+    /* Top toolbar (must keep) */
+    .toolbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:0;
+    }
+    .title-wrap{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .page-title{
+      margin:0;
+      font-size:22px;
+      letter-spacing:0.2px;
+      color:var(--primary);
+    }
+    .subtitle{
+      margin:0;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    /* Primary action button */
+    .btn{
+      border:1px solid transparent;
+      background:transparent;
+      color:var(--primary);
+      border-radius:10px;
+      padding:10px 12px;
+      height:40px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      cursor:pointer;
+      transition:transform var(--trans) ease, background var(--trans) ease, border-color var(--trans) ease, color var(--trans) ease;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .btn:active{ transform:translateY(1px); }
+    .btn-primary{
+      background:var(--accent);
+      color:#fff;
+    }
+    .btn-primary:hover{ background:#a71830; } /* hover加深 */
+    .btn-ghost{
+      border-color:var(--border);
+      background:rgba(255,255,255,0.5);
+    }
+    .btn-ghost:hover{
+      background:#fff;
+      border-color:rgba(10,31,68,0.18);
+    }
+    .btn-danger{
+      border-color:rgba(196,30,58,0.28);
+      color:var(--accent);
+      background:transparent;
+    }
+    .btn-danger:hover{
+      background:rgba(196,30,58,0.06);
+      border-color:rgba(196,30,58,0.40);
+    }
+    .btn-sm{
+      height:36px;
+      padding:8px 10px;
+      border-radius:10px;
+      font-size:13px;
+    }
+
+    .icon{
+      width:16px;
+      height:16px;
+      display:inline-block;
+    }
+
+    /* =========================
+      4) Panels / Cards
+    ========================== */
+    .panel{
+      background:var(--panel);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      border:1px solid rgba(10,31,68,0.06);
+      padding:var(--pad);
+    }
+
+    /* Search row (must keep & optimize) */
+    .search-row{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .search-input{
+      height:var(--h);
+      border-radius:var(--radius-sm);
+      border:1px solid rgba(10,31,68,0.14);
+      background:#fff;
+      padding:0 14px;
+      outline:none;
+      flex:1;
+      transition:border-color var(--trans) ease, box-shadow var(--trans) ease;
+    }
+    .search-input:focus{
+      border-color:rgba(10,31,68,0.30);
+      box-shadow:0 0 0 4px rgba(10,31,68,0.06);
+    }
+    .search-btn{
+      width:var(--h);
+      height:var(--h);
+      border-radius:var(--radius-sm);
+      border:1px solid rgba(10,31,68,0.14);
+      background:#fff;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      transition:transform var(--trans) ease, box-shadow var(--trans) ease, border-color var(--trans) ease;
+    }
+    .search-btn:hover{
+      border-color:rgba(10,31,68,0.26);
+      box-shadow:0 8px 18px rgba(10,31,68,0.06);
+      transform:translateY(-1px);
+    }
+
+    /* Grid of player cards (replaces table) */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0, 1fr));
+      gap:16px;
+    }
+    @media (max-width: 1024px){
+      .grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 640px){
+      .grid{ grid-template-columns:1fr; }
+      .toolbar{ flex-direction:column; align-items:flex-start; }
+      .toolbar .right{ width:100%; }
+      .toolbar .right .btn-primary{ width:100%; justify-content:center; }
+    }
+
+    .player-card{
+      background:#fff;
+      border-radius:var(--radius);
+      border:1px solid rgba(10,31,68,0.08);
+      box-shadow:var(--shadow);
+      padding:24px; /* 区块内边距 >=24px */
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      transition:transform var(--trans) ease, box-shadow var(--trans) ease, border-color var(--trans) ease;
+      position:relative;
+      overflow:hidden;
+    }
+    .player-card:hover{
+      transform:translateY(-2px); /* 上浮2px */
+      box-shadow:var(--shadow-hover);
+      border-color:rgba(10,31,68,0.14);
+    }
+
+    .card-top{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      min-height:56px;
+    }
+    .avatar{
+      width:44px;
+      height:44px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      color:#fff;
+      font-weight:700;
+      letter-spacing:0.4px;
+      background:linear-gradient(135deg, rgba(10,31,68,0.95), rgba(10,31,68,0.65));
+      box-shadow:0 10px 18px rgba(10,31,68,0.10);
+      flex:0 0 auto;
+    }
+    .name-block{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      min-width:0;
+    }
+    .name{
+      margin:0;
+      font-size:16px;
+      color:var(--primary);
+      font-weight:800;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .idline{
+      font-size:12.5px;
+      color:var(--muted);
+      display:flex;
+      gap:8px;
+      align-items:center;
+      min-width:0;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(10,31,68,0.12);
+      background:rgba(10,31,68,0.03);
+      color:var(--primary);
+      font-size:12px;
+      white-space:nowrap;
+    }
+    .badge-dot{
+      width:6px;height:6px;border-radius:999px;background:var(--accent);
+      display:inline-block;
+    }
+
+    .info{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:10px 14px;
+      padding-top:8px;
+      border-top:1px solid rgba(10,31,68,0.06);
+    }
+    .kv{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      min-width:0;
+    }
+    .k{
+      font-size:12px;
+      color:var(--muted);
+    }
+    .v{
+      font-size:13.5px;
+      color:var(--text);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .card-actions{
+      margin-top:auto;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:flex-end;
+      padding-top:10px;
+      border-top:1px solid rgba(10,31,68,0.06);
+    }
+
+    /* =========================
+      5) Empty state
+    ========================== */
+    .empty{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      text-align:center;
+      padding:44px 24px;
+    }
+    .empty-illus{
+      width:140px;
+      height:90px;
+      position:relative;
+      border-radius:18px;
+      background:rgba(10,31,68,0.03);
+      border:1px dashed rgba(10,31,68,0.16);
+    }
+    .empty-illus:before{
+      content:"";
+      position:absolute;
+      left:18px; top:18px;
+      width:44px; height:44px;
+      border-radius:999px;
+      background:linear-gradient(135deg, rgba(10,31,68,0.80), rgba(10,31,68,0.45));
+      opacity:0.9;
+    }
+    .empty-illus:after{
+      content:"";
+      position:absolute;
+      right:18px; top:26px;
+      width:62px; height:10px;
+      border-radius:999px;
+      background:rgba(10,31,68,0.14);
+      box-shadow:0 18px 0 rgba(10,31,68,0.10), 0 36px 0 rgba(10,31,68,0.08);
+    }
+    .empty-title{
+      margin:0;
+      font-size:16px;
+      color:var(--primary);
+      font-weight:800;
+    }
+    .empty-desc{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    /* =========================
+      6) Pagination
+    ========================== */
+    .pager{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:8px;
+      padding-top:18px;
+    }
+    .page-btn{
+      min-width:38px;
+      height:38px;
+      border-radius:10px;
+      border:1px solid rgba(10,31,68,0.12);
+      background:#fff;
+      cursor:pointer;
+      transition:transform var(--trans) ease, box-shadow var(--trans) ease, border-color var(--trans) ease, background var(--trans) ease, color var(--trans) ease;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:0 10px;
+      color:var(--primary);
+      user-select:none;
+    }
+    .page-btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 10px 18px rgba(10,31,68,0.06);
+      border-color:rgba(10,31,68,0.20);
+    }
+    .page-btn.active{
+      background:rgba(10,31,68,0.10);
+      border-color:rgba(10,31,68,0.28);
+      font-weight:800;
+    }
+    .page-btn:disabled{
+      opacity:0.45;
+      cursor:not-allowed;
+      transform:none;
+      box-shadow:none;
+    }
+
+    /* small helper */
+    .sr-only{
+      position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="page">
+      <!-- =========================
+        顶部工具栏（必须保留）
+      ========================== -->
+      <div class="toolbar">
+        <div class="title-wrap">
+          <h1 class="page-title">中国篮球运动员信息库</h1>
+          <p class="subtitle">简洁、专业的球员信息管理页面（前端模拟数据，可后续对接 Flask/Jinja2）。</p>
+        </div>
+        <div class="right">
+          <button class="btn btn-primary" id="btnAdd" type="button" title="新增球员">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+            </svg>
+            + 新增球员
+          </button>
+        </div>
+      </div>
+
+      <!-- =========================
+        搜索栏（整行，输入即时过滤）
+      ========================== -->
+      <div class="panel">
+        <div class="search-row">
+          <input id="searchInput" class="search-input" type="text"
+                 placeholder="支持按身份证号/类型/单位模糊搜索" autocomplete="off" />
+          <button id="searchBtn" class="search-btn" type="button" title="搜索">
+            <span class="sr-only">搜索</span>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M10.5 18a7.5 7.5 0 1 1 0-15a7.5 7.5 0 0 1 0 15Z" stroke="#0A1F44" stroke-width="2"/>
+              <path d="M16.5 16.5L21 21" stroke="#0A1F44" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- =========================
+        列表区域：卡片网格（替换传统表格）
+      ========================== -->
+      <div class="panel" style="padding:24px;">
+        <!-- 这里是网格容器（JS渲染） -->
+        <div id="grid" class="grid"></div>
+
+        <!-- 空状态（JS控制显示） -->
+        <div id="empty" class="empty" style="display:none;">
+          <div class="empty-illus" aria-hidden="true"></div>
+          <h3 class="empty-title">暂无球员信息</h3>
+          <p class="empty-desc">尝试调整搜索条件，或点击右上角“新增球员”。</p>
+        </div>
+
+        <!-- 分页器（JS渲染） -->
+        <div id="pager" class="pager"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================
+      数据区（后续集成 Flask 时：把这里替换成 Jinja2 循环即可）
+      - players = [{...}, ...]
+    ========================================================== */
+    const players = [
+      { id: 1,  name: "姚明",   nationalId: "310101198009120015", type: "中锋", unit: "上海", ethnicity: "汉族", birthplace: "上海市", age: 44 },
+      { id: 2,  name: "易建联", nationalId: "440101198710270021", type: "大前锋", unit: "广东", ethnicity: "汉族", birthplace: "广东省鹤山市", age: 37 },
+      { id: 3,  name: "王治郅", nationalId: "110101197707080033", type: "中锋", unit: "八一", ethnicity: "汉族", birthplace: "北京市", age: 48 },
+      { id: 4,  name: "周琦",   nationalId: "650101199601160044", type: "中锋", unit: "新疆", ethnicity: "汉族", birthplace: "河南省新乡市", age: 29 },
+      { id: 5,  name: "郭艾伦", nationalId: "210101199311140055", type: "后卫", unit: "辽宁", ethnicity: "汉族", birthplace: "辽宁省辽阳市", age: 32 },
+      { id: 6,  name: "赵继伟", nationalId: "210101199508250066", type: "控卫", unit: "辽宁", ethnicity: "汉族", birthplace: "辽宁省鞍山市", age: 30 },
+      { id: 7,  name: "胡明轩", nationalId: "440101199803100077", type: "后卫", unit: "广东", ethnicity: "汉族", birthplace: "广东省梅州市", age: 28 },
+      { id: 8,  name: "张镇麟", nationalId: "210101200001280088", type: "前锋", unit: "辽宁", ethnicity: "汉族", birthplace: "辽宁省沈阳市", age: 26 },
+      { id: 9,  name: "赵睿",   nationalId: "440101199601140099", type: "后卫", unit: "广东", ethnicity: "汉族", birthplace: "黑龙江省大庆市", age: 29 },
+      { id: 10, name: "孙铭徽", nationalId: "330101199608160110", type: "后卫", unit: "浙江", ethnicity: "汉族", birthplace: "浙江省杭州市", age: 29 },
+    ];
+
+    /* =========================================================
+      页面状态
+    ========================================================== */
+    const state = {
+      query: "",
+      page: 1,
+      pageSize: 8, // 10条数据可形成2页，便于展示分页器
+    };
+
+    const elGrid  = document.getElementById("grid");
+    const elEmpty = document.getElementById("empty");
+    const elPager = document.getElementById("pager");
+    const elSearchInput = document.getElementById("searchInput");
+    const elSearchBtn = document.getElementById("searchBtn");
+    const elAddBtn = document.getElementById("btnAdd");
+
+    /* =========================================================
+      工具函数
+    ========================================================== */
+    function maskNationalId(nationalId){
+      // 要求：脱敏显示前6位+****（这里加上末4位更可读；如需严格“只显示****”，删掉 + tail 即可）
+      const s = String(nationalId || "");
+      if (s.length < 6) return "******";
+      const head = s.slice(0, 6);
+      const tail = s.length >= 4 ? s.slice(-4) : "";
+      return `${head}****${tail}`;
+    }
+
+    function initials(name){
+      // 中文姓名：取首字；英文：取首字母
+      const s = (name || "").trim();
+      if (!s) return "?";
+      return s[0].toUpperCase();
+    }
+
+    function clampText(s){
+      return (s == null) ? "" : String(s);
+    }
+
+    function filterPlayers(){
+      const q = state.query.trim().toLowerCase();
+      if (!q) return players.slice();
+      return players.filter(p => {
+        const nationalId = String(p.nationalId || "").toLowerCase();
+        const type = String(p.type || "").toLowerCase();
+        const unit = String(p.unit || "").toLowerCase();
+        return nationalId.includes(q) || type.includes(q) || unit.includes(q);
+      });
+    }
+
+    function paginate(list){
+      const total = list.length;
+      const totalPages = Math.max(1, Math.ceil(total / state.pageSize));
+      state.page = Math.min(state.page, totalPages);
+      const start = (state.page - 1) * state.pageSize;
+      const end = start + state.pageSize;
+      return { total, totalPages, items: list.slice(start, end) };
+    }
+
+    /* =========================================================
+      渲染：卡片网格 + 空状态 + 分页器
+    ========================================================== */
+    function render(){
+      const filtered = filterPlayers();
+      const { total, totalPages, items } = paginate(filtered);
+
+      // 网格
+      elGrid.innerHTML = "";
+      elEmpty.style.display = (total === 0) ? "flex" : "none";
+      elGrid.style.display = (total === 0) ? "none" : "grid";
+
+      if (total > 0){
+        items.forEach(p => elGrid.appendChild(renderCard(p)));
+      }
+
+      // 分页器
+      renderPager(totalPages, total);
+    }
+
+    function renderCard(p){
+      const card = document.createElement("div");
+      card.className = "player-card";
+
+      card.innerHTML = `
+        <div class="card-top">
+          <div class="avatar" aria-hidden="true">${initials(p.name)}</div>
+          <div class="name-block">
+            <p class="name">${clampText(p.name)}</p>
+            <div class="idline">
+              <span class="badge"><span class="badge-dot"></span>${clampText(p.type)}</span>
+              <span class="mono">${maskNationalId(p.nationalId)}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info">
+          <div class="kv">
+            <div class="k">单位</div>
+            <div class="v">${clampText(p.unit)}</div>
+          </div>
+          <div class="kv">
+            <div class="k">民族</div>
+            <div class="v">${clampText(p.ethnicity)}</div>
+          </div>
+          <div class="kv">
+            <div class="k">出生地</div>
+            <div class="v">${clampText(p.birthplace)}</div>
+          </div>
+          <div class="kv">
+            <div class="k">年龄</div>
+            <div class="v mono">${p.age ?? ""}</div>
+          </div>
+        </div>
+
+        <div class="card-actions">
+          <button class="btn btn-ghost btn-sm" type="button" data-action="edit" data-id="${p.id}">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 20h4l10.5-10.5a1.5 1.5 0 0 0 0-2.12l-1.88-1.88a1.5 1.5 0 0 0-2.12 0L4 16v4Z" stroke="#0A1F44" stroke-width="2" stroke-linejoin="round"/>
+              <path d="M13.5 6.5l4 4" stroke="#0A1F44" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            编辑
+          </button>
+          <button class="btn btn-danger btn-sm" type="button" data-action="delete" data-id="${p.id}">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 3h6m-9 4h12m-1 0-.8 13a2 2 0 0 1-2 2H9.8a2 2 0 0 1-2-2L7 7" stroke="#C41E3A" stroke-width="2" stroke-linecap="round"/>
+              <path d="M10 11v7M14 11v7" stroke="#C41E3A" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            删除
+          </button>
+        </div>
+      `;
+
+      // 事件：编辑/删除（前端模拟）
+      card.addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-action]");
+        if (!btn) return;
+        const action = btn.dataset.action;
+        const id = Number(btn.dataset.id);
+
+        if (action === "edit"){
+          alert(`（演示）编辑球员 ID=${id}\\n后续接 Flask：跳转 /players/${id}/edit`);
+        }
+        if (action === "delete"){
+          const ok = confirm(`确认删除球员 ID=${id} 吗？\\n（演示：仅从前端数组移除）`);
+          if (!ok) return;
+          const idx = players.findIndex(x => x.id === id);
+          if (idx >= 0) players.splice(idx, 1);
+          state.page = Math.max(1, state.page);
+          render();
+        }
+      });
+
+      return card;
+    }
+
+    function renderPager(totalPages, total){
+      elPager.innerHTML = "";
+      if (total === 0) return;
+
+      // Prev
+      elPager.appendChild(pageBtn("上一页", state.page - 1, state.page === 1, true));
+
+      // Numbers (simple, clean)
+      for (let i = 1; i <= totalPages; i++){
+        const btn = pageBtn(String(i), i, false, false);
+        if (i === state.page) btn.classList.add("active");
+        elPager.appendChild(btn);
+      }
+
+      // Next
+      elPager.appendChild(pageBtn("下一页", state.page + 1, state.page === totalPages, true));
+    }
+
+    function pageBtn(label, page, disabled, isWide){
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "page-btn";
+      btn.textContent = label;
+      btn.disabled = !!disabled;
+      if (isWide) btn.style.minWidth = "72px";
+      btn.addEventListener("click", () => {
+        state.page = page;
+        render();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+      return btn;
+    }
+
+    /* =========================================================
+      搜索：输入即时过滤（must keep）
+    ========================================================== */
+    function setQuery(q){
+      state.query = q;
+      state.page = 1;
+      render();
+    }
+
+    elSearchInput.addEventListener("input", (e) => setQuery(e.target.value));
+    elSearchBtn.addEventListener("click", () => setQuery(elSearchInput.value));
+
+    /* 顶部“新增球员”按钮：前端演示 */
+    elAddBtn.addEventListener("click", () => {
+      alert("（演示）新增球员\\n后续接 Flask：跳转 /players/new");
+    });
+
+    /* 初始渲染 */
+    render();
+  </script>
+</body>
+</html>
+

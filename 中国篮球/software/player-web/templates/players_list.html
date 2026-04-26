@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>中国篮球运动员信息库</title>
+  <style>
+    /* =========================================================
+      1) Design Tokens（统一管理颜色/间距/字体）
+    ========================================================= */
+    :root{
+      --blue:#1D428A;      /* 主色：深蓝 */
+      --red:#C41E3A;       /* 点缀色：中国红 */
+      --bg:#F5F7FA;        /* 背景：浅灰 */
+      --card:#FFFFFF;      /* 卡片：纯白 */
+      --text:#1F2937;      /* 文本：深灰 */
+
+      --muted:#6B7280;     /* 辅助文本 */
+      --line:#F3F4F6;      /* 极浅分割线 */
+      --line-strong:#E5E7EB;
+
+      --radius:14px;
+      --shadow:0 10px 30px rgba(17,24,39,.06);
+      --shadow-soft:0 2px 12px rgba(17,24,39,.04);
+
+      --space-16:16px;
+      --space-24:24px;
+      --space-32:32px;
+
+      --row-h:56px;        /* 行高 >=56px */
+      --td-x:16px;         /* 列左右 padding >=16px */
+
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+              "PingFang SC","Hiragino Sans GB","Microsoft YaHei", sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+
+      --t: 0.18s;
+    }
+
+    /* =========================================================
+      2) Base（去装饰、最大化留白、提升“呼吸感”）
+    ========================================================= */
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background:var(--bg);
+      line-height:1.65;
+    }
+    a{ color:inherit; text-decoration:none; }
+    button,input{ font:inherit; }
+    .container{
+      max-width:1180px;
+      margin:0 auto;
+      padding:28px 18px 48px;
+    }
+    .h1{
+      margin:0;
+      font-size:22px;
+      letter-spacing:0.2px;
+      color:var(--text);
+    }
+    .muted{ color:var(--muted); }
+    .mono{
+      font-family:var(--mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* =========================================================
+      3) Layout: 顶部工具栏（标题 + 新增按钮）
+    ========================================================= */
+    .toolbar{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:var(--space-24);
+    }
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .brand .tagline{
+      margin:0;
+      font-size:13px;
+      color:var(--muted);
+      max-width:72ch;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:10px 14px;
+      border-radius:12px;
+      border:1px solid transparent;
+      cursor:pointer;
+      user-select:none;
+      transition: transform var(--t) ease, background var(--t) ease, border-color var(--t) ease, color var(--t) ease, box-shadow var(--t) ease;
+      background:transparent;
+      color:var(--text);
+      height:44px;
+      white-space:nowrap;
+    }
+    .btn:active{ transform:translateY(1px); }
+    .btn-primary{
+      background:var(--red);
+      color:#fff;
+      box-shadow:0 10px 20px rgba(196,30,58,.18);
+    }
+    .btn-primary:hover{
+      background:#a71830;
+      box-shadow:0 14px 28px rgba(196,30,58,.22);
+      transform:translateY(-1px);
+    }
+    .btn-ghost{
+      border-color:var(--line-strong);
+      background:rgba(255,255,255,.65);
+      color:var(--text);
+    }
+    .btn-ghost:hover{
+      background:#fff;
+      border-color:#D1D5DB;
+      transform:translateY(-1px);
+      box-shadow:var(--shadow-soft);
+    }
+    .btn-danger{
+      border-color:rgba(196,30,58,.30);
+      color:var(--red);
+      background:transparent;
+    }
+    .btn-danger:hover{
+      background:rgba(196,30,58,.06);
+      border-color:rgba(196,30,58,.45);
+      transform:translateY(-1px);
+    }
+    .btn-sm{
+      height:36px;
+      padding:8px 10px;
+      border-radius:10px;
+      gap:8px;
+      font-size:13px;
+    }
+    .icon{
+      width:16px;
+      height:16px;
+      display:inline-block;
+    }
+
+    /* =========================================================
+      4) Card / Panel（统一白卡片、轻阴影）
+    ========================================================= */
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:var(--space-24);
+    }
+
+    /* =========================================================
+      5) Search（圆形输入框 + 主色按钮；清晰 hover/focus 动效）
+    ========================================================= */
+    .search-wrap{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:var(--space-24); /* 搜索栏与表格距离 >= 24px */
+    }
+    .search{
+      flex:1;
+      position:relative;
+    }
+    .search input{
+      width:100%;
+      height:48px;
+      border-radius:999px;
+      border:1px solid var(--line-strong);
+      background:#fff;
+      padding:0 16px 0 44px;
+      outline:none;
+      transition: box-shadow var(--t) ease, border-color var(--t) ease;
+    }
+    .search input:focus{
+      border-color:rgba(29,66,138,.35);
+      box-shadow:0 0 0 6px rgba(29,66,138,.10);
+    }
+    .search .search-icon{
+      position:absolute;
+      left:16px;
+      top:50%;
+      transform:translateY(-50%);
+      color:rgba(31,41,55,.55);
+      pointer-events:none;
+    }
+    .search-btn{
+      width:48px;
+      height:48px;
+      border-radius:999px;
+      border:1px solid transparent;
+      background:var(--blue);
+      color:#fff;
+      box-shadow:0 10px 20px rgba(29,66,138,.16);
+    }
+    .search-btn:hover{
+      background:#16356f;
+      transform:translateY(-1px);
+      box-shadow:0 14px 28px rgba(29,66,138,.20);
+    }
+
+    .meta-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-top:6px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    /* =========================================================
+      6) Table（专业数据展示 + 呼吸感）
+    ========================================================= */
+    .table-wrap{
+      width:100%;
+      overflow:auto;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#fff;
+    }
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      min-width:980px; /* 小屏不压缩不换行，允许滚动 */
+      font-size:14px;
+    }
+    thead th{
+      position:sticky;
+      top:0;
+      background:#F9FAFB;
+      color:var(--text);
+      text-align:left;
+      font-weight:800;
+      height:56px;
+      padding:0 var(--td-x);
+      border-bottom:1px solid var(--line);
+      white-space:nowrap;
+    }
+    tbody td{
+      height:var(--row-h);
+      padding:0 var(--td-x);
+      border-bottom:1px solid var(--line); /* 极浅分割线 */
+      vertical-align:middle;
+      white-space:nowrap;
+    }
+    tbody tr:hover{ background:#F8FAFC; }
+    tbody tr:last-child td{ border-bottom:0; }
+    .col-actions{
+      width:170px;
+      text-align:right;
+    }
+    .actions{
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--line-strong);
+      background:#fff;
+      color:var(--text);
+      font-size:13px;
+    }
+    .pill .dot{
+      width:7px;
+      height:7px;
+      border-radius:999px;
+      background:var(--blue);
+      opacity:.9;
+    }
+
+    /* =========================================================
+      7) Pagination（简洁现代，当前页高亮）
+    ========================================================= */
+    .pager{
+      margin-top:20px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .page-btn{
+      min-width:38px;
+      height:38px;
+      border-radius:12px;
+      border:1px solid var(--line-strong);
+      background:#fff;
+      color:var(--text);
+      cursor:pointer;
+      transition: transform var(--t) ease, box-shadow var(--t) ease, border-color var(--t) ease, background var(--t) ease;
+      padding:0 10px;
+    }
+    .page-btn:hover{
+      transform:translateY(-1px);
+      box-shadow:var(--shadow-soft);
+      border-color:#D1D5DB;
+    }
+    .page-btn.active{
+      background:rgba(29,66,138,.10);
+      border-color:rgba(29,66,138,.28);
+      color:var(--blue);
+      font-weight:800;
+    }
+    .page-btn:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+      transform:none;
+      box-shadow:none;
+    }
+
+    /* =========================================================
+      8) Empty state
+    ========================================================= */
+    .empty{
+      display:none;
+      padding:44px 18px;
+      text-align:center;
+      color:var(--muted);
+    }
+    .empty .illus{
+      width:140px;
+      height:92px;
+      margin:0 auto 14px;
+      border-radius:18px;
+      border:1px dashed #E5E7EB;
+      background:linear-gradient(180deg, #FFFFFF 0%, #F9FAFB 100%);
+      position:relative;
+    }
+    .empty .illus:before{
+      content:"";
+      position:absolute;
+      left:18px; top:18px;
+      width:46px; height:46px;
+      border-radius:999px;
+      background:linear-gradient(135deg, rgba(29,66,138,.95), rgba(29,66,138,.55));
+      box-shadow:0 12px 18px rgba(29,66,138,.14);
+    }
+    .empty .illus:after{
+      content:"";
+      position:absolute;
+      right:18px; top:26px;
+      width:64px; height:10px;
+      border-radius:999px;
+      background:#E5E7EB;
+      box-shadow:0 18px 0 #EEF2F7, 0 36px 0 #F3F4F6;
+    }
+    .empty h3{
+      margin:0;
+      font-size:16px;
+      color:var(--text);
+      font-weight:900;
+    }
+    .empty p{
+      margin:6px 0 0;
+      font-size:13px;
+    }
+
+    /* =========================================================
+      9) Responsive
+    ========================================================= */
+    @media (max-width: 720px){
+      .toolbar{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      .toolbar .btn-primary{ width:100%; }
+      .search-wrap{
+        flex-direction:column;
+        align-items:stretch;
+      }
+      .search-btn{
+        width:100%;
+        border-radius:14px;
+      }
+      .search input{
+        border-radius:14px;
+        padding-left:44px;
+      }
+      .meta-row{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="toolbar">
+      <div class="brand">
+        <h1 class="h1">中国篮球运动员信息库</h1>
+        <p class="tagline">参考 Basketball-Reference 的数据清晰度与 NBA 官网的现代视觉表现，打造更专业的球员信息库。</p>
+      </div>
+      <button class="btn btn-primary" id="btnAdd" type="button" title="新增球员">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 5v14M5 12h14" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+        + 新增球员
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="search-wrap">
+        <div class="search">
+          <span class="search-icon" aria-hidden="true">
+            <svg class="icon" viewBox="0 0 24 24" fill="none">
+              <path d="M10.5 18a7.5 7.5 0 1 1 0-15a7.5 7.5 0 0 1 0 15Z" stroke="#6B7280" stroke-width="2"/>
+              <path d="M16.5 16.5L21 21" stroke="#6B7280" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <input id="q" type="text" placeholder="支持按身份证号/类型/单位模糊搜索" autocomplete="off" />
+        </div>
+        <button class="btn search-btn" id="btnSearch" type="button" title="搜索">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M10.5 18a7.5 7.5 0 1 1 0-15a7.5 7.5 0 0 1 0 15Z" stroke="white" stroke-width="2"/>
+            <path d="M16.5 16.5L21 21" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span style="font-weight:800;">搜索</span>
+        </button>
+      </div>
+
+      <div class="meta-row">
+        <div>结果：<span class="mono" id="count">0</span> 条</div>
+        <div class="muted">小屏设备可左右滑动查看完整表格</div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="table-wrap" id="tableWrap">
+        <table aria-label="中国篮球运动员信息库">
+          <thead>
+            <tr>
+              <th style="width:86px;">ID</th>
+              <th>姓名</th>
+              <th style="width:260px;">身份证号</th>
+              <th style="width:160px;">类型</th>
+              <th style="width:160px;">单位</th>
+              <th style="width:120px;">民族</th>
+              <th style="width:220px;">出生地</th>
+              <th style="width:90px;">年龄</th>
+              <th class="col-actions">操作</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="empty" id="empty">
+        <div class="illus" aria-hidden="true"></div>
+        <h3>暂无球员信息</h3>
+        <p>尝试更换搜索条件，或点击右上角“新增球员”。</p>
+      </div>
+
+      <div class="pager" id="pager"></div>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================
+      数据区（前端模拟；后续替换为后端数据即可）
+    ========================================================= */
+    const players = [
+      { id: 1,  name: "姚明",   nationalId: "310101198009120015", type: "中锋",   unit: "上海", ethnicity: "汉族", birthplace: "上海市",           age: 44 },
+      { id: 2,  name: "易建联", nationalId: "440101198710270021", type: "大前锋", unit: "广东", ethnicity: "汉族", birthplace: "广东省鹤山市",     age: 37 },
+      { id: 3,  name: "王治郅", nationalId: "110101197707080033", type: "中锋",   unit: "八一", ethnicity: "汉族", birthplace: "北京市",           age: 48 },
+      { id: 4,  name: "周琦",   nationalId: "650101199601160044", type: "中锋",   unit: "新疆", ethnicity: "汉族", birthplace: "河南省新乡市",     age: 29 },
+      { id: 5,  name: "郭艾伦", nationalId: "210101199311140055", type: "后卫",   unit: "辽宁", ethnicity: "汉族", birthplace: "辽宁省辽阳市",     age: 32 },
+      { id: 6,  name: "赵继伟", nationalId: "210101199508250066", type: "控卫",   unit: "辽宁", ethnicity: "汉族", birthplace: "辽宁省鞍山市",     age: 30 },
+      { id: 7,  name: "胡明轩", nationalId: "440101199803100077", type: "后卫",   unit: "广东", ethnicity: "汉族", birthplace: "广东省梅州市",     age: 28 },
+      { id: 8,  name: "张镇麟", nationalId: "210101200001280088", type: "前锋",   unit: "辽宁", ethnicity: "汉族", birthplace: "辽宁省沈阳市",     age: 26 },
+      { id: 9,  name: "赵睿",   nationalId: "440101199601140099", type: "后卫",   unit: "广东", ethnicity: "汉族", birthplace: "黑龙江省大庆市",   age: 29 },
+      { id: 10, name: "孙铭徽", nationalId: "330101199608160110", type: "后卫",   unit: "浙江", ethnicity: "汉族", birthplace: "浙江省杭州市",     age: 29 },
+    ];
+
+    const state = { q: "", page: 1, pageSize: 6 };
+
+    const elQ = document.getElementById("q");
+    const elTbody = document.getElementById("tbody");
+    const elCount = document.getElementById("count");
+    const elPager = document.getElementById("pager");
+    const elEmpty = document.getElementById("empty");
+    const elTableWrap = document.getElementById("tableWrap");
+
+    function filterPlayers(){
+      const q = state.q.trim().toLowerCase();
+      if (!q) return [...players];
+      return players.filter(p => {
+        const a = String(p.nationalId || "").toLowerCase();
+        const b = String(p.type || "").toLowerCase();
+        const c = String(p.unit || "").toLowerCase();
+        return a.includes(q) || b.includes(q) || c.includes(q);
+      });
+    }
+
+    function paginate(list){
+      const total = list.length;
+      const pages = Math.max(1, Math.ceil(total / state.pageSize));
+      state.page = Math.min(state.page, pages);
+      const start = (state.page - 1) * state.pageSize;
+      return { total, pages, items: list.slice(start, start + state.pageSize) };
+    }
+
+    function iconEdit(){
+      return `
+        <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 20h4l10.5-10.5a1.5 1.5 0 0 0 0-2.12l-1.88-1.88a1.5 1.5 0 0 0-2.12 0L4 16v4Z" stroke="#1F2937" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M13.5 6.5l4 4" stroke="#1F2937" stroke-width="2" stroke-linecap="round"/>
+        </svg>`;
+    }
+    function iconTrash(){
+      return `
+        <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9 3h6m-9 4h12m-1 0-.8 13a2 2 0 0 1-2 2H9.8a2 2 0 0 1-2-2L7 7" stroke="#C41E3A" stroke-width="2" stroke-linecap="round"/>
+          <path d="M10 11v7M14 11v7" stroke="#C41E3A" stroke-width="2" stroke-linecap="round"/>
+        </svg>`;
+    }
+
+    function escapeHtml(s){
+      return String(s ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function render(){
+      const filtered = filterPlayers();
+      const { total, pages, items } = paginate(filtered);
+
+      elCount.textContent = String(total);
+      elTbody.innerHTML = "";
+
+      const hasData = total > 0;
+      elEmpty.style.display = hasData ? "none" : "block";
+      elTableWrap.style.display = hasData ? "block" : "none";
+
+      if (hasData){
+        items.forEach(p => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td class="mono">${p.id}</td>
+            <td><strong>${escapeHtml(p.name)}</strong></td>
+            <td class="mono">${escapeHtml(p.nationalId)}</td>
+            <td><span class="pill"><span class="dot"></span>${escapeHtml(p.type)}</span></td>
+            <td>${escapeHtml(p.unit)}</td>
+            <td>${escapeHtml(p.ethnicity)}</td>
+            <td>${escapeHtml(p.birthplace)}</td>
+            <td class="mono">${p.age ?? ""}</td>
+            <td class="col-actions">
+              <div class="actions">
+                <button class="btn btn-ghost btn-sm" data-action="edit" data-id="${p.id}" type="button">${iconEdit()} 编辑</button>
+                <button class="btn btn-danger btn-sm" data-action="delete" data-id="${p.id}" type="button">${iconTrash()} 删除</button>
+              </div>
+            </td>
+          `;
+          elTbody.appendChild(tr);
+        });
+      }
+
+      renderPager(pages);
+    }
+
+    function renderPager(pages){
+      elPager.innerHTML = "";
+      if (pages <= 1) return;
+
+      elPager.appendChild(pageBtn("上一页", state.page - 1, state.page === 1, true));
+      for (let i = 1; i <= pages; i++){
+        const b = pageBtn(String(i), i, false, false);
+        if (i === state.page) b.classList.add("active");
+        elPager.appendChild(b);
+      }
+      elPager.appendChild(pageBtn("下一页", state.page + 1, state.page === pages, true));
+    }
+
+    function pageBtn(label, page, disabled, wide){
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "page-btn";
+      b.textContent = label;
+      b.disabled = disabled;
+      if (wide) b.style.minWidth = "78px";
+      b.addEventListener("click", () => {
+        state.page = page;
+        render();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+      return b;
+    }
+
+    function setQuery(v){
+      state.q = v;
+      state.page = 1;
+      render();
+    }
+
+    elQ.addEventListener("input", (e) => setQuery(e.target.value));
+    document.getElementById("btnSearch").addEventListener("click", () => setQuery(elQ.value));
+
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-action]");
+      if (!btn) return;
+      const action = btn.dataset.action;
+      const id = Number(btn.dataset.id);
+
+      if (action === "edit"){
+        alert(`（演示）编辑球员 ID=${id}\\n后续接入后端：跳转 /players/${id}/edit`);
+      } else if (action === "delete"){
+        const ok = confirm(`确认删除球员 ID=${id} 吗？\\n（演示：仅从前端数组移除）`);
+        if (!ok) return;
+        const idx = players.findIndex(p => p.id === id);
+        if (idx >= 0) players.splice(idx, 1);
+        render();
+      }
+    });
+
+    document.getElementById("btnAdd").addEventListener("click", () => {
+      alert("（演示）新增球员\\n后续接入后端：跳转 /players/new");
+    });
+
+    render();
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% if mode == "new" %}
+  {% set title = "新增球员" %}
+{% else %}
+  {% set title = "编辑球员 #" ~ player_id %}
+{% endif %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <div>
+      <h1 class="h1">{{ title }}</h1>
+      <p class="muted">带 * 的字段为必填。</p>
+    </div>
+    <div class="actions">
+      {% if mode == "edit" %}
+        <a class="btn btn--ghost" href="{{ url_for('player_detail', player_id=player_id) }}">返回详情</a>
+      {% else %}
+        <a class="btn btn--ghost" href="{{ url_for('players_list') }}">返回列表</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <form class="card form" method="post">
+    <div class="grid">
+      <label>
+        <span>身份证号 *</span>
+        <input name="national_id" value="{{ player.get('national_id','') }}" required />
+      </label>
+      <label>
+        <span>球员类型 *</span>
+        <input name="player_type" value="{{ player.get('player_type','') }}" required />
+      </label>
+      <label>
+        <span>年龄</span>
+        <input name="age" value="{{ player.get('age','') }}" />
+      </label>
+      <label>
+        <span>民族</span>
+        <input name="ethnicity" value="{{ player.get('ethnicity','') }}" />
+      </label>
+      <label>
+        <span>出生地</span>
+        <input name="birthplace" value="{{ player.get('birthplace','') }}" />
+      </label>
+      <label>
+        <span>单位</span>
+        <input name="organization" value="{{ player.get('organization','') }}" />
+      </label>
+    </div>
+
+    <div class="form__footer">
+      <button class="btn btn--primary" type="submit">保存</button>
+    </div>
+  </form>
+{% endblock %}
+
